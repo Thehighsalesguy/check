@@ -110,6 +110,25 @@ def rgb_split(img, px):
 def flash(img, a, col=(255, 255, 255)):
     if a > .01: img.alpha_composite(Image.new('RGBA', img.size, col + (int(255 * min(a, 1)),)))
 
+# ---------------- shared brand pieces ----------------
+LOGO = os.path.join(HERE, 'assets', 'logo.png')
+
+def logo_sprite(wd):
+    def mk():
+        im = Image.open(LOGO).convert('RGBA'); im = im.resize((wd, int(im.height * wd / im.width)), Image.LANCZOS)
+        pad = 26; out = Image.new('RGBA', (im.width + 2 * pad, im.height + 2 * pad), (0, 0, 0, 0))
+        blk = Image.new('RGBA', im.size, (0, 0, 0, 255)); blk.putalpha(im.split()[3].point(lambda v: int(v * .45)))
+        sh = Image.new('RGBA', out.size, (0, 0, 0, 0)); sh.alpha_composite(blk, (pad + 3, pad + 7))
+        out.alpha_composite(sh.filter(ImageFilter.GaussianBlur(7))); out.alpha_composite(im, (pad, pad)); return out
+    return cached(('logo', wd), mk)
+
+def header(img, w, top, counter=None):
+    """one fixed header band: counter pill left, logo + '19+ STORE' tag right (same x axis)"""
+    if counter: paste(img, pill(counter, INK, CREAM, h=54, size=28, pad=22), 140, top + 80)
+    cx = w - 165
+    paste(img, logo_sprite(250), cx, top + 112)
+    paste(img, pill('19+ STORE', INK, YEL, h=54, size=28, pad=26, outline=YEL), cx, top + 250)
+
 # ---------------- carousel ----------------
 def bar(img, post, w, h):
     d = ImageDraw.Draw(img); y0 = h - 92
@@ -117,41 +136,45 @@ def bar(img, post, w, h):
     d.text((44, y0 + 50), 'VAPE & MUNCHIES', font=F(32), fill=CREAM + (255,), anchor='lm')
     d.text((w - 44, y0 + 50), '19+ ONLY · OPEN 24/7' if post.get('adult') else 'OPEN 24/7 · COQUITLAM', font=F(28, BARLOW), fill=BLUE + (255,), anchor='rm')
 
+HEAD_SZ, SUB_SZ = 96, 46
+
 def carousel_slide(post, idx):
     items = post['items']; single = post.get('single'); n = len(items) + (0 if single else 1)
-    img = None
-    if idx == len(items) and not single:  # CTA, text only
-        img = bg(CW, CH, 'ink', ang=.3, cy=CH * .4, n=14)
-        for k, (x, y, r) in enumerate([(150, 220, 60), (930, 300, 44), (110, 1000, 40), (960, 1050, 66), (540, 120, 30)]):
+    label = None if single else f'{idx + 1}/{n}'
+    if idx == len(items) and not single:  # closing slide, text only
+        img = bg(CW, CH, 'ink', ang=.3, cy=CH * .46, n=14)
+        for k, (x, y, r) in enumerate([(120, 420, 44), (960, 460, 40), (110, 1040, 38), (965, 1060, 56)]):
             paste(img, star(r, [YEL, ORANGE, BLUE][k % 3]), x, y, rot=k * 17)
-        paste(img, tspr(post.get('cta1', 'COME GET IT'), 150, YEL, 12, 980, rot=-3), 540, 330)
-        paste(img, tspr(post.get('cta2', 'IN STORE NOW'), 56, WHITE, 8, 960), 540, 520)
-        paste(img, tspr(ADDRESS, 82, CREAM, 9, 980), 540, 740)
-        paste(img, tspr('COQUITLAM BC', 58, BLUE, 7, 900), 540, 840)
-        paste(img, pill('OPEN 24/7', ORANGE, INK, h=118, size=74, pad=60), 540, 1010)
-        if post.get('adult'): paste(img, tspr('19+ ONLY · VALID ID REQUIRED', 40, YEL, 6, 980), 540, 1160)
-        paste(img, tspr('@VAPEANDMUNCHIES', 44, WHITE, 6, 900), 540, 1090 if not post.get('adult') else 1230)
+        header(img, CW, 0, label)
+        paste(img, tspr(post.get('cta1', 'COME GET IT'), 140, YEL, 11, 960), 540, 420)
+        paste(img, tspr(post.get('cta2', 'IN STORE NOW'), 48, WHITE, 7, 960), 540, 560)
+        paste(img, tspr(ADDRESS, 76, CREAM, 9, 960), 540, 730)
+        paste(img, tspr('COQUITLAM BC', 52, BLUE, 7, 900), 540, 820)
+        paste(img, pill('OPEN 24/7', ORANGE, INK, h=112, size=70, pad=58), 540, 980)
+        paste(img, tspr('19+ ONLY · VALID ID REQUIRED', 38, YEL, 6, 960), 540, 1110)
+        paste(img, tspr('@VAPEANDMUNCHIES', 42, WHITE, 6, 900), 540, 1180)
         bar(img, post, CW, CH); return img.convert('RGB')
     it = items[idx]
-    img = bg(CW, CH, it.get('theme', 'orange'), ang=idx * .21, cy=CH * .52)
+    img = bg(CW, CH, it.get('theme', 'orange'), ang=idx * .21, cy=CH * .55)
+    header(img, CW, 0, label)
     if idx == 0:
-        lines = post['title']
-        for k, ln in enumerate(lines): paste(img, tspr(ln, 118 if k == 0 else 104, WHITE if k == 0 else YEL, 11, 980, rot=-2 + k * 3), 540, 175 + k * 130)
-        ay = 800; spr = art(it, 880, 730)
+        for k, ln in enumerate(post['title']): paste(img, tspr(ln, 100, WHITE if k == 0 else YEL, 11, 960), 540, 335 + k * 112)
+        spr = art(it, 880, 600); ay = 835
     else:
-        paste(img, tspr(it['name'], 112, WHITE, 11, 980, rot=-2), 540, 180)
-        if it.get('sub'): paste(img, tspr(it['sub'], 54, YEL, 7, 960, rot=1.5), 540, 300)
-        ay = 760; spr = art(it, 920, 780)
-    paste(img, spr, 540, ay, rot=it.get('rot', -2 if idx % 2 == 0 else 2))
+        paste(img, tspr(it['name'], HEAD_SZ, WHITE, 10, 960), 540, 345)
+        if it.get('sub'): paste(img, tspr(it['sub'], SUB_SZ, YEL, 6, 960), 540, 440)
+        spr = art(it, 900, 660); ay = 850
+    paste(img, spr, 540, ay)
     if idx == 0:
-        paste(img, pill(it['name'], INK, CREAM, h=74, size=38, pad=34), 540, 1180)
-        if not single: paste(img, pill('SWIPE >>', ORANGE, INK, h=66, size=34, pad=34), 905, 1180, rot=-3)
-    if not single: paste(img, pill(f'{idx + 1}/{n}', INK, CREAM, h=54, size=28, pad=22), 140, 70)
-    if post.get('adult'): paste(img, badge19(104), 960, 78)
+        paste(img, pill(it['name'], INK, CREAM, h=72, size=36, pad=34), 540, 1202)
+        if not single: paste(img, pill('SWIPE >>', ORANGE, INK, h=66, size=34, pad=34), 905, 1202)
     bar(img, post, CW, CH)
     return img.convert('RGB')
 
 # ---------------- reels ----------------
+TOP = 235          # header band offset in reels (clear of the Reels UI)
+NAME_Y, SUB_Y, ART_Y, ART_H = 610, 705, 1140, 740
+
 def timeline(spec):
     b = 60 / spec['bpm']; segs = []; t = 0.0
     hb = spec.get('hook_beats', 4); segs.append(dict(kind='hook', t0=t, t1=t + hb * b)); t += hb * b
@@ -161,63 +184,55 @@ def timeline(spec):
     return segs, t
 
 def reel_footer(img, spec):
-    d = ImageDraw.Draw(img)
-    if spec.get('adult'):
-        paste(img, pill('19+ ONLY · VALID ID REQUIRED', INK, YEL, h=56, size=26, pad=24, outline=YEL), 540, 1560)
-    else:
-        paste(img, tspr('VAPE & MUNCHIES · OPEN 24/7', 30, CREAM, 5, 900), 540, 1565)
+    if spec.get('adult'): paste(img, pill('19+ ONLY · VALID ID REQUIRED', INK, YEL, h=56, size=26, pad=24, outline=YEL), 540, 1545)
+    else: paste(img, tspr('VAPE & MUNCHIES · OPEN 24/7', 30, CREAM, 5, 900), 540, 1548)
 
 def make_frame(spec, segs, i):
     t = i / FPS
     seg = next((s for s in segs if s['t0'] <= t < s['t1']), segs[-1]); lt = t - seg['t0']; sl = seg['t1'] - seg['t0']
-    items = spec['items']; b = 60 / spec['bpm']
+    items = spec['items']; b = 60 / spec['bpm']; N = len(items)
     if seg['kind'] == 'hook':
         img = bg(W, H, spec.get('hook_theme', 'ink'), ang=t * .5, cy=H * .5, n=20)
-        gp = eb(cl((lt - .1) / .5), 1.5); big = star(330 * gp + 5, (255, 255, 255), 5, .46, rot=-90 + t * 25); big.putalpha(big.split()[3].point(lambda v: int(v * .16))); paste(img, big, 540, 1260)
-        lines = spec['hook']
-        for k, (ln, sz, col) in enumerate(lines):
+        gp = eb(cl((lt - .1) / .5), 1.5); big = star(330 * gp + 5, (255, 255, 255), 5, .46, rot=-90 + t * 25); big.putalpha(big.split()[3].point(lambda v: int(v * .16))); paste(img, big, 540, 1230)
+        header(img, W, TOP)
+        for k, (ln, sz, col) in enumerate(spec['hook']):
             p = (lt - k * b * .8) / .28
             if p <= 0: continue
-            sc = eb(p, 2.3); shake = 10 * max(0, 1 - p) * math.sin(t * 90)
-            paste(img, tspr(ln, sz, col, 12, 990, rot=(-3, 2, -2)[k % 3]), 540 + shake, 640 + k * 230, scale=max(.05, sc))
-        if lt > b * 2.2:
-            q = eb((lt - b * 2.2) / .3); paste(img, star(120 * q + 5, YEL), 880, 360, rot=t * 80)
-        if spec.get('adult'): paste(img, badge19(120), 140, 330)
+            shake = 10 * max(0, 1 - p) * math.sin(t * 90)
+            paste(img, tspr(ln, sz, col, 12, 960), 540 + shake, 800 + k * 220, scale=max(.05, eb(p, 2.3)))
+        if lt > b * 2.2: paste(img, star(70 * eb((lt - b * 2.2) / .3) + 5, YEL), 540, 1230, rot=t * 80)
         reel_footer(img, spec)
         if lt < .12: flash(img, .8 * (1 - lt / .12))
         return img.convert('RGB')
     if seg['kind'] == 'outro':
         img = bg(W, H, 'ink', ang=t * .4, cy=H * .46, n=14)
-        for k, (x, y, r) in enumerate([(160, 380, 60), (930, 470, 46), (120, 1250, 44), (960, 1280, 66)]):
+        for k, (x, y, r) in enumerate([(130, 1300, 50), (950, 1320, 60), (300, 1430, 30), (780, 1440, 34)]):
             paste(img, star(r * (1 + .1 * math.sin(t * 6 + k)), [YEL, ORANGE, BLUE][k % 3]), x, y, rot=t * 40 * (1 if k % 2 else -1))
-        seq = [(spec.get('out1', 'IN STORE NOW'), 128, YEL, 560, -3), (ADDRESS, 86, CREAM, 800, 0), ('COQUITLAM BC', 58, BLUE, 905, 0)]
-        for k, (ln, sz, col, y, r) in enumerate(seq):
+        header(img, W, TOP)
+        seq = [(spec.get('out1', 'IN STORE NOW'), 120, YEL, 720), (ADDRESS, 80, CREAM, 910), ('COQUITLAM BC', 54, BLUE, 1010)]
+        for k, (ln, sz, col, y) in enumerate(seq):
             p = (lt - k * .22) / .3
-            if p > 0: paste(img, tspr(ln, sz, col, 10, 980, rot=r), 540, y, scale=max(.05, eb(p)))
+            if p > 0: paste(img, tspr(ln, sz, col, 10, 960), 540, y, scale=max(.05, eb(p)))
         p = (lt - .75) / .3
-        if p > 0: paste(img, pill('OPEN 24/7', ORANGE, INK, h=124, size=78, pad=60), 540, 1090, scale=max(.05, eb(p)) * (1 + .03 * math.sin(t * 9)))
-        if spec.get('cta') and lt > 1.1:
-            p = (lt - 1.1) / .3; paste(img, tspr(spec['cta'], 62, WHITE, 8, 980), 540, 1290, scale=max(.05, eb(p)))
+        if p > 0: paste(img, pill('OPEN 24/7', ORANGE, INK, h=118, size=74, pad=58), 540, 1160, scale=max(.05, eb(p)) * (1 + .03 * math.sin(t * 9)))
+        if spec.get('cta') and lt > 1.1: paste(img, tspr(spec['cta'], 56, WHITE, 8, 960), 540, 1340, scale=max(.05, eb((lt - 1.1) / .3)))
         reel_footer(img, spec)
         if lt < .12: flash(img, .7 * (1 - lt / .12))
         return img.convert('RGB')
     k = seg['i']; it = items[k]
-    img = bg(W, H, it.get('theme', 'orange'), ang=t * .4 + k, cy=H * .5, n=18)
+    img = bg(W, H, it.get('theme', 'orange'), ang=t * .4 + k, cy=H * .52, n=18)
+    header(img, W, TOP, f'{k + 1}/{N}')
+    mh = it.get('maxh', ART_H); spr = art(it, 900, mh)
+    float_y = 10 * math.sin(lt * 2 * math.pi / (b * 2)); tilt = 1.5 * math.sin(lt * 2 * math.pi / (b * 4)); grow = 1 + .05 * lt / sl
+    base_y = ART_Y + (mh - ART_H) * .5
     p = lt / .42
-    spr = art(it, 900, it.get('maxh', 900))
-    float_y = 10 * math.sin(lt * 2 * math.pi / (b * 2)); base_y = 1000 + (it.get('maxh', 900) - 900) * .5; tilt = it.get('rot', -3 if k % 2 == 0 else 3) + 2.5 * math.sin(lt * 2 * math.pi / (b * 4))
-    grow = 1 + .05 * lt / sl
     if k % 2 == 0: ax, ay, sc = 540, base_y + float_y, max(.05, eb(p, 2.2))
     else: ax, ay, sc = 540 + (1 - eo(p)) * 1000, base_y + float_y, 1.0
     paste(img, spr, ax, ay, rot=tilt, scale=sc * grow)
     pn = (lt - .16) / .3
-    if pn > 0:
-        shake = 8 * max(0, 1 - pn) * math.sin(t * 80)
-        paste(img, tspr(it['name'], 124, WHITE, 11, 990, rot=-2 if k % 2 == 0 else 2), 540 + shake, 330, scale=max(.05, eb(pn, 2.0)))
+    if pn > 0: paste(img, tspr(it['name'], 104, WHITE, 10, 960), 540 + 8 * max(0, 1 - pn) * math.sin(t * 80), NAME_Y, scale=max(.05, eb(pn, 2.0)))
     ps = (lt - .38) / .25
-    if ps > 0 and it.get('sub'): paste(img, tspr(it['sub'], 54, YEL, 7, 980, rot=1.5), 540, 470 + (1 - eo(ps)) * 60, scale=1.0)
-    paste(img, pill(f'{k + 1}/{len(items)}', INK, CREAM, h=58, size=30, pad=24), 150, 190)
-    if spec.get('adult'): paste(img, badge19(110), 930, 190)
+    if ps > 0 and it.get('sub'): paste(img, tspr(it['sub'], 46, YEL, 6, 960), 540, SUB_Y + (1 - eo(ps)) * 50)
     reel_footer(img, spec)
     if lt < .13: flash(img, .75 * (1 - lt / .13)); img = rgb_split(img, 16 * (1 - lt / .13))
     return img.convert('RGB')
@@ -236,14 +251,13 @@ def render_reel(spec, out, tmp):
     from multiprocessing import get_context
     segs, dur = timeline(spec); n = int(dur * FPS)
     os.makedirs(tmp, exist_ok=True)
-    # pre-build sprites in the parent so forked workers share them
-    for it in spec['items']: art(it, 900, it.get('maxh', 900))
+    for it in spec['items']: art(it, 900, it.get('maxh', ART_H))
+    for wd in (250,): logo_sprite(wd)
     _STATE['spec'], _STATE['segs'] = spec, segs
     step = math.ceil(n / 4); jobs = [(k * step, min(n, (k + 1) * step), f'{tmp}/c{k}.mp4') for k in range(4)]
     with get_context('fork').Pool(2) as pool: paths = pool.map(_chunk, jobs)
     open(f'{tmp}/list.txt', 'w').write(''.join(f"file '{p}'\n" for p in paths))
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', f'{tmp}/list.txt', '-c', 'copy', f'{tmp}/video.mp4'], check=True)
-    # audio: music + sfx on every segment start
     base = music.TRACKS[spec['track']](dur + .5, spec['bpm']); buf = np.zeros(len(base) + music.SR); buf[:len(base)] = base * .8
     for s in segs:
         music.put(buf, music.whoosh(.4), max(0, s['t0'] - .3), .9); music.put(buf, music.impact(.7), s['t0'], .55)
@@ -255,5 +269,4 @@ def render_reel(spec, out, tmp):
 
 def reel_still(spec, secs, out):
     segs, dur = timeline(spec)
-    for s in secs:
-        make_frame(spec, segs, int(s * FPS)).save(out.replace('.jpg', f'_{s}.jpg'), quality=88)
+    for s in secs: make_frame(spec, segs, int(s * FPS)).save(out.replace('.jpg', f'_{s}.jpg'), quality=88)

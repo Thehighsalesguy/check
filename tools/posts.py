@@ -7,8 +7,8 @@ OUT = os.environ.get('VM_OUT', '/home/claude/work/out')
 
 POSTS = {
  'soda': dict(kind='carousel', adult=False, title=['SODA', 'WALL'], cta1='GRAB YOURS', cta2='SODAS IN STORE NOW', items=[
-    dict(src='IMG_2451', mode='cut', name='MOUNTAIN DEW', sub='MANGO PINEAPPLE + CREAM SODA', theme='orange'),
-    dict(src='IMG_2453', mode='cut', name='CANADA DRY', sub='ZERO SUGAR · LIMITED OFFER', theme='blue'),
+    dict(src='IMG_2451', mode='cut', name='MOUNTAIN DEW', sub='MANGO PINEAPPLE & CREAM', theme='orange'),
+    dict(src='IMG_2453', mode='cut', name='CANADA DRY', sub='LIMITED OFFER CANS', theme='blue'),
     dict(src='IMG_2458', mode='cut', name='ALPINE MIX', sub='ORANGE & COLA', theme='red')]),
  'imports': dict(kind='carousel', adult=False, title=['SNACK', 'RUN'], cta1='SNACK UP', cta2='THE WALL IS STOCKED', items=[
     dict(src='IMG_2381', mode='photo', name='VIDAL GUMMI', sub='SPICY MANGOS', theme='red', fy=.45),
@@ -17,30 +17,30 @@ POSTS = {
  'rie': dict(kind='carousel', single=True, adult=True, title=['BLUE', 'BEAKER'], items=[
     dict(src='IMG_2433', mode='cut', name='RIE GLASS BEAKER', sub='', theme='blue')]),
  'spoon': dict(kind='carousel', adult=True, title=['SKULL', 'AND BONE'], cta1='COME SEE IT', cta2='SWIRL GLASS IN STORE NOW', items=[
-    dict(src='IMG_2401', mode='photo', name='SKULL & BONE', sub='SWIRL GLASS', theme='orange'),
-    dict(src='IMG_2402', mode='photo', name='BONE STEM', sub='CLOSE-UP', theme='purple'),
-    dict(src='IMG_2400', mode='photo', name='SIDE VIEW', sub='ALL ANGLES', theme='blue')]),
+    dict(src='IMG_2401', mode='photo', name='SKULL & BONE', sub='SWIRLED GLASS', theme='orange'),
+    dict(src='IMG_2402', mode='photo', name='BONE STEM', sub='SWIRLS FOR DAYS', theme='purple'),
+    dict(src='IMG_2400', mode='photo', name='LOOK CLOSER', sub='GLASS ART IN STORE', theme='blue')]),
  'goblin': dict(kind='carousel', adult=True, title=['MEET THE', 'GOBLIN'], cta1='SAY HI', cta2='GOBLIN BEAKER IN STORE NOW', items=[
     dict(src='IMG_2405', mode='cut', name='GREY BEAKER', sub='GOBLIN ART', theme='purple'),
-    dict(src='IMG_2406', mode='cut', name='THE GOBLIN', sub='ANOTHER ANGLE', theme='green')]),
+    dict(src='IMG_2406', mode='cut', name='GOBLIN MODE', sub='FULL DISPLAY', theme='green')]),
  'balls': dict(kind='reel', adult=False, bpm=108, track='funk', hook_theme='ink', hook=[('WHICH BALL', 124, D.WHITE), ('ARE YOU?', 150, D.YEL)],
     item_beats=4, cta='COMMENT YOUR PICK', out1='GRAB A BAG', items=[
     dict(src='IMG_2460', mode='photo', name='MELON BALL', sub='SWEET MELON', theme='green', fy=.55),
     dict(src='IMG_2461', mode='photo', name='CORN BALL', sub='CORN SOUP', theme='yellow', fy=.55),
     dict(src='IMG_2462', mode='photo', name='CHEESE BALL', sub='CHEDDAR CHEESE', theme='orange', fy=.55),
-    dict(src='IMG_2463', mode='photo', name='TAKOYAKI BALL', sub='', theme='red', fy=.55)]),
+    dict(src='IMG_2463', mode='photo', name='TAKOYAKI BALL', sub='TAKOYAKI FLAVOUR', theme='red', fy=.55)]),
  'gold': dict(kind='reel', adult=True, bpm=140, track='trap', hook_theme='ink', hook=[('GOLD', 170, D.YEL), ('STANDARD', 140, D.WHITE)],
     item_beats=8, out1='COME SEE IT', items=[
-    dict(src='IMG_2363', mode='cut', name='GOLD CHROME', sub='BEAKER · FRONT', theme='purple', maxh=960),
-    dict(src='IMG_2364', mode='cut', name='GOLD CHROME', sub='SIDE ANGLE', theme='pink', maxh=960)]),
+    dict(src='IMG_2363', mode='cut', name='GOLD CHROME', sub='MIRROR-FINISH BEAKER', theme='purple'),
+    dict(src='IMG_2364', mode='cut', name='SHOW-OFF SHINE', sub='TALL NECK, BIG PRESENCE', theme='pink')]),
  'skull': dict(kind='reel', adult=True, bpm=100, track='synthwave', hook_theme='purple', hook=[('PINK GLASS', 128, D.WHITE), ('BLACK SKULL', 128, D.YEL)],
     item_beats=8, out1='COME SEE IT', items=[
-    dict(src='IMG_2403', mode='cut', name='PINK GLASS', sub='RED EYE GLASS', theme='blue', maxh=960),
-    dict(src='IMG_2404', mode='cut', name='SKULL PERC', sub='ANOTHER ANGLE', theme='ink', maxh=960)]),
+    dict(src='IMG_2403', mode='cut', name='PINK GLASS', sub='RED EYE GLASS', theme='blue'),
+    dict(src='IMG_2404', mode='cut', name='SKULL PERC', sub='SPOOKY IN A GOOD WAY', theme='ink')]),
  'sugar': dict(kind='reel', adult=True, bpm=90, track='lofi', hook_theme='ink', hook=[('SUGAR', 160, D.YEL), ('SKULL', 160, D.WHITE)],
     item_beats=8, out1='COME SEE IT', items=[
-    dict(src='IMG_2407', mode='cut', name='SUGAR SKULL', sub='FROSTED + BLUE CHROME', theme='yellow', maxh=960),
-    dict(src='IMG_2408', mode='cut', name='FROSTED GLASS', sub='ANOTHER ANGLE', theme='blue', maxh=960)]),
+    dict(src='IMG_2407', mode='cut', name='SUGAR SKULL', sub='FROSTED + BLUE CHROME', theme='yellow'),
+    dict(src='IMG_2408', mode='cut', name='FROSTED FINISH', sub='SKULL ART + HYDRO', theme='blue')]),
 }
 
 if __name__ == '__main__':
