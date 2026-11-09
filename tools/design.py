@@ -69,22 +69,49 @@ def photo_card(im, w, h, fx=.5, fy=.5, zoom=1.0, border=14, r=34):
     out.paste(inner, (pad + border, pad + border), rr_mask(w, h, r))
     return out
 
+def grid_art(item, maxw, maxh):
+    """2x2 (or n-up) sticker grid from cutout pngs named IMG_xxxx_a.png..."""
+    cols = item.get('cols', 2); names = item['cuts']; rows = (len(names) + cols - 1) // cols
+    cw, ch = maxw // cols, maxh // rows
+    canvas = Image.new('RGBA', (maxw + 80, maxh + 80), (0, 0, 0, 0))
+    tilts = item.get('tilts', [-4, 3, 3, -3])
+    for k, nm in enumerate(names):
+        c = trim(Image.open(f'{CUT_DIR}/{nm}.png').convert('RGBA'))
+        if item.get('deskew', True):
+            import cv2
+            a = np.asarray(c.split()[3]); cnt = max(cv2.findContours((a > 128).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0], key=cv2.contourArea)
+            (_, _), (rw, rh), ang = cv2.minAreaRect(cnt)
+            ang = ang % 90; ang = ang - 90 if ang > 45 else ang
+            c = trim(c.rotate(ang, expand=True, resample=Image.BICUBIC)); print(nm, 'deskew', round(ang, 1))
+        s = min(cw * 1.04 / c.width, ch * 1.0 / c.height)
+        c = c.resize((int(c.width * s), int(c.height * s)), Image.LANCZOS)
+        sp = sticker(c, border=item.get('border', 12), blur=14)
+        sp = sp.rotate(tilts[k % len(tilts)], expand=True, resample=Image.BICUBIC)
+        cx = 40 + (k % cols) * cw + cw / 2; cy = 40 + (k // cols) * ch + ch / 2
+        canvas.alpha_composite(sp, (int(cx - sp.width / 2), int(cy - sp.height / 2)))
+    return trim(canvas)
+
 def art(item, maxw, maxh):
     """sprite for one item; cached"""
     def mk():
+        if item['mode'] == 'grid': return grid_art(item, maxw, maxh)
         if item['mode'] == 'cut':
             c = trim(cutout_of(item['src'], **item.get('cutkw', {})))
-            c = ImageEnhance.Contrast(c.convert('RGBA'), ) .enhance(1.04) if False else c
+            if item.get('pop'):
+                a = c.split()[3]; rgb = c.convert('RGB')
+                rgb = ImageEnhance.Color(ImageEnhance.Contrast(rgb).enhance(1.22)).enhance(1.35); c = rgb.convert('RGBA'); c.putalpha(a)
             s = min(maxw / c.width, maxh / c.height) * item.get('scale', 1.0)
             c = c.resize((max(1, int(c.width * s)), max(1, int(c.height * s))), Image.LANCZOS)
             return sticker(c, border=item.get('border', 14))
+        if item['mode'] == 'grid':
+            return grid_art(item, maxw, maxh)
         im = load_photo(item['src'], crop=item.get('crop'))
         ar = im.width / im.height
         w = maxw; h = int(w / ar)
         if h > maxh: h = maxh; w = int(h * ar)
         w = int(w * item.get('scale', 1.0)); h = int(h * item.get('scale', 1.0))
         return photo_card(im, w - 28, h - 28, item.get('fx', .5), item.get('fy', .5), item.get('zoom', 1.0))
-    return cached(('art', item['src'], item['mode'], maxw, maxh, item.get('crop'), item.get('zoom'), item.get('scale')), mk)
+    return cached(('art', item['src'], item['mode'], tuple(item.get('cuts', ())), maxw, maxh, item.get('crop'), item.get('zoom'), item.get('scale')), mk)
 
 def tspr(txt, size, fill=WHITE, stroke=8, maxw=980, f=BUNGEE, rot=0, shadow=(6, 8), scol=INK):
     def mk():
@@ -163,7 +190,12 @@ def carousel_slide(post, idx):
     else:
         paste(img, tspr(it['name'], HEAD_SZ, WHITE, 10, 960), 540, 345)
         if it.get('sub'): paste(img, tspr(it['sub'], SUB_SZ, YEL, 6, 960), 540, 440)
-        spr = art(it, 900, 660); ay = 850
+        spr = art(it, it.get('aw', 900), it.get('ah', 660)); ay = it.get('ay', 850)
+    if it.get('glow'):
+        gl = Image.new('RGBA', (900, 900), (0, 0, 0, 0)); yy, xx = np.mgrid[0:900, 0:900].astype(np.float32)
+        r = np.sqrt((xx - 450) ** 2 + (yy - 450) ** 2) / 450; al = (np.clip(1 - r, 0, 1) ** 1.8 * 150).astype(np.uint8)
+        arr = np.zeros((900, 900, 4), np.uint8); arr[..., :3] = (255, 244, 224); arr[..., 3] = al; paste(img, Image.fromarray(arr), 540, ay - 10, scale=1.25)
+        paste(img, soft_shadow(int(spr.width * .8), 56, 150, 18), 540, ay + spr.height // 2 - 8)
     paste(img, spr, 540, ay)
     if idx == 0:
         paste(img, pill(it['name'], INK, CREAM, h=72, size=36, pad=34), 540, 1202)

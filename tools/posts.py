@@ -13,13 +13,13 @@ POSTS = {
  'imports': dict(kind='carousel', adult=False, title=['SNACK', 'RUN'], cta1='SNACK UP', cta2='THE WALL IS STOCKED', items=[
     dict(src='IMG_2381', mode='photo', name='VIDAL GUMMI', sub='SPICY MANGOS', theme='red', fy=.45),
     dict(src='IMG_2459', mode='cut', name='CHEETOS', sub='MASALA BALLS', theme='green', cutkw=dict(min_frac=.3, trim_thin=.4)),
-    dict(src='IMG_2450', mode='photo', crop=(.17, 0, .62, 1), name='SNACK WALL', sub='STACKED UP', theme='purple', scale=1.12)]),
+    dict(src='IMG_2450', mode='grid', cuts=['IMG_2450_a','IMG_2450_b','IMG_2450_c','IMG_2450_d'], name='POPCORN WALL', sub='HBAF · 4 FLAVOURS', theme='purple', aw=900, ah=690, ay=880, tilts=[-3, 2, 2, -2])]),
  'rie': dict(kind='carousel', single=True, adult=True, title=['BLUE', 'BEAKER'], items=[
     dict(src='IMG_2433', mode='cut', name='RIE GLASS BEAKER', sub='', theme='blue')]),
  'spoon': dict(kind='carousel', adult=True, title=['SKULL', 'AND BONE'], cta1='COME SEE IT', cta2='SWIRL GLASS IN STORE NOW', items=[
-    dict(src='IMG_2401', mode='photo', name='SKULL & BONE', sub='SWIRLED GLASS', theme='orange'),
-    dict(src='IMG_2402', mode='photo', name='BONE STEM', sub='SWIRLS FOR DAYS', theme='purple'),
-    dict(src='IMG_2400', mode='photo', name='LOOK CLOSER', sub='GLASS ART IN STORE', theme='blue')]),
+    dict(src='IMG_2402', mode='cut', name='SKULL & BONE', sub='SWIRLED GLASS', theme='purple', pop=1, glow=1, aw=940, ah=700, ay=860),
+    dict(src='IMG_2401', mode='cut', name='BONE STEM', sub='SWIRLS FOR DAYS', theme='ink', pop=1, glow=1, aw=940, ah=700, ay=860),
+    dict(src='IMG_2400', mode='cut', name='LOOK CLOSER', sub='GLASS ART IN STORE', theme='pink', pop=1, glow=1, aw=940, ah=700, ay=860)]),
  'goblin': dict(kind='carousel', adult=True, title=['MEET THE', 'GOBLIN'], cta1='SAY HI', cta2='GOBLIN BEAKER IN STORE NOW', items=[
     dict(src='IMG_2405', mode='cut', name='GREY BEAKER', sub='GOBLIN ART', theme='purple'),
     dict(src='IMG_2406', mode='cut', name='GOBLIN MODE', sub='FULL DISPLAY', theme='green')]),
