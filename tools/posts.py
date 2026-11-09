@@ -41,6 +41,10 @@ POSTS = {
     item_beats=8, out1='COME SEE IT', items=[
     dict(src='IMG_2407', mode='cut', name='SUGAR SKULL', sub='FROSTED + BLUE CHROME', theme='yellow'),
     dict(src='IMG_2408', mode='cut', name='FROSTED FINISH', sub='SKULL ART + HYDRO', theme='blue')]),
+ 'pickle': dict(kind='reel', adult=False, bpm=120, track='house', hook_theme='green', hook_beats=5, outro_beats=6,
+    hook=[('PICKLE', 170, D.YEL), ('PUFFED', 170, D.WHITE)], item_beats=9, out1='GRAB A BAG', cta='WHICH ONE ARE YOU?', items=[
+    dict(video='/home/claude/work/pp/IMG_2464.MOV', name='HOT MAMA', sub='HOT PICKLE FLAVOURED', theme='red', slow=1.4),
+    dict(video='/home/claude/work/pp/IMG_2466.MOV', name='GARLIC JOE', sub='GARLIC PICKLE FLAVOURED', theme='purple', slow=1.35, cropy=1.0)]),
 }
 
 if __name__ == '__main__':

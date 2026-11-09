@@ -91,6 +91,26 @@ def grid_art(item, maxw, maxh):
         canvas.alpha_composite(sp, (int(cx - sp.width / 2), int(cy - sp.height / 2)))
     return trim(canvas)
 
+_CLIPS = {}
+CARD_W, CARD_H = 540, 720
+def load_clip(it):
+    """decode a video item to a list of RGB PIL frames cropped to the card ratio (cached)"""
+    key = it['video']
+    if key in _CLIPS: return _CLIPS[key]
+    cy = it.get('cropy', .5)
+    vf = f"eq=contrast=1.06:saturation=1.15,scale={CARD_W}:{CARD_H}:force_original_aspect_ratio=increase,crop={CARD_W}:{CARD_H}:(iw-{CARD_W})/2:(ih-{CARD_H})*{cy},fps=30,format=rgb24"
+    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', key, '-vf', vf, '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], capture_output=True, check=True).stdout
+    fs = CARD_W * CARD_H * 3
+    frames = [Image.frombytes('RGB', (CARD_W, CARD_H), raw[i:i + fs]) for i in range(0, len(raw) - fs + 1, fs)]
+    base = photo_card(Image.new('RGB', (CARD_W, CARD_H), (20, 20, 20)), CARD_W, CARD_H)
+    _CLIPS[key] = (frames, base); return _CLIPS[key]
+
+def clip_sprite(it, lt):
+    frames, base = load_clip(it)
+    i = min(len(frames) - 1, int(max(0, lt) / it.get('slow', 1.0) * 30))
+    sp = base.copy(); off = (sp.width - CARD_W) // 2, (sp.height - CARD_H) // 2
+    sp.paste(frames[i].convert('RGBA'), off, rr_mask(CARD_W, CARD_H, 34)); return sp
+
 def art(item, maxw, maxh):
     """sprite for one item; cached"""
     def mk():
@@ -254,9 +274,9 @@ def make_frame(spec, segs, i):
     k = seg['i']; it = items[k]
     img = bg(W, H, it.get('theme', 'orange'), ang=t * .4 + k, cy=H * .52, n=18)
     header(img, W, TOP, f'{k + 1}/{N}')
-    mh = it.get('maxh', ART_H); spr = art(it, 900, mh)
+    mh = it.get('maxh', ART_H); spr = clip_sprite(it, lt) if it.get('video') else art(it, 900, mh)
     float_y = 10 * math.sin(lt * 2 * math.pi / (b * 2)); tilt = 1.5 * math.sin(lt * 2 * math.pi / (b * 4)); grow = 1 + .05 * lt / sl
-    base_y = ART_Y + (mh - ART_H) * .5
+    base_y = (1130 if it.get('video') else ART_Y) + (mh - ART_H) * .5
     p = lt / .42
     if k % 2 == 0: ax, ay, sc = 540, base_y + float_y, max(.05, eb(p, 2.2))
     else: ax, ay, sc = 540 + (1 - eo(p)) * 1000, base_y + float_y, 1.0
@@ -283,7 +303,9 @@ def render_reel(spec, out, tmp):
     from multiprocessing import get_context
     segs, dur = timeline(spec); n = int(dur * FPS)
     os.makedirs(tmp, exist_ok=True)
-    for it in spec['items']: art(it, 900, it.get('maxh', ART_H))
+    for it in spec['items']:
+        if it.get('video'): load_clip(it)
+        else: art(it, 900, it.get('maxh', ART_H))
     for wd in (250,): logo_sprite(wd)
     _STATE['spec'], _STATE['segs'] = spec, segs
     step = math.ceil(n / 4); jobs = [(k * step, min(n, (k + 1) * step), f'{tmp}/c{k}.mp4') for k in range(4)]
