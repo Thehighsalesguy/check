@@ -111,6 +111,13 @@ def clip_sprite(it, lt):
     sp = base.copy(); off = (sp.width - CARD_W) // 2, (sp.height - CARD_H) // 2
     sp.paste(frames[i].convert('RGBA'), off, rr_mask(CARD_W, CARD_H, 34)); return sp
 
+_VC = {}
+def vcut_sprite(it, lt):
+    key = it['vcut']
+    if key not in _VC: _VC[key] = np.load(key, mmap_mode='r')
+    arr = _VC[key]; i = min(len(arr) - 1, int(max(0, lt) * 30 / it.get('slow', 1.0)))
+    return sticker(Image.fromarray(np.array(arr[i]), 'RGBA'), border=it.get('border', 14), blur=16)
+
 def art(item, maxw, maxh):
     """sprite for one item; cached"""
     def mk():
@@ -274,9 +281,9 @@ def make_frame(spec, segs, i):
     k = seg['i']; it = items[k]
     img = bg(W, H, it.get('theme', 'orange'), ang=t * .4 + k, cy=H * .52, n=18)
     header(img, W, TOP, f'{k + 1}/{N}')
-    mh = it.get('maxh', ART_H); spr = clip_sprite(it, lt) if it.get('video') else art(it, 900, mh)
+    mh = it.get('maxh', ART_H); spr = clip_sprite(it, lt) if it.get('video') else (vcut_sprite(it, lt) if it.get('vcut') else art(it, 900, mh))
     float_y = 10 * math.sin(lt * 2 * math.pi / (b * 2)); tilt = 1.5 * math.sin(lt * 2 * math.pi / (b * 4)); grow = 1 + .05 * lt / sl
-    base_y = (1130 if it.get('video') else ART_Y) + (mh - ART_H) * .5
+    base_y = (1130 if (it.get('video') or it.get('vcut')) else ART_Y) + (mh - ART_H) * .5
     p = lt / .42
     if k % 2 == 0: ax, ay, sc = 540, base_y + float_y, max(.05, eb(p, 2.2))
     else: ax, ay, sc = 540 + (1 - eo(p)) * 1000, base_y + float_y, 1.0
@@ -305,6 +312,7 @@ def render_reel(spec, out, tmp):
     os.makedirs(tmp, exist_ok=True)
     for it in spec['items']:
         if it.get('video'): load_clip(it)
+        elif it.get('vcut'): pass
         else: art(it, 900, it.get('maxh', ART_H))
     for wd in (250,): logo_sprite(wd)
     _STATE['spec'], _STATE['segs'] = spec, segs

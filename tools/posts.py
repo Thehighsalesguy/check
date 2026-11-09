@@ -45,6 +45,11 @@ POSTS = {
     hook=[('PICKLE', 170, D.YEL), ('PUFFED', 170, D.WHITE)], item_beats=9, out1='GRAB A BAG', cta='WHICH ONE ARE YOU?', items=[
     dict(video='/home/claude/work/pp/IMG_2464.MOV', name='HOT MAMA', sub='HOT PICKLE FLAVOURED', theme='red', slow=1.4),
     dict(video='/home/claude/work/pp/IMG_2466.MOV', name='GARLIC JOE', sub='GARLIC PICKLE FLAVOURED', theme='purple', slow=1.35, cropy=1.0)]),
+ 'sodaspin': dict(kind='reel', adult=False, bpm=140, track='drill', hook_theme='orange', hook_beats=6, outro_beats=8,
+    hook=[('SODA', 180, D.YEL), ('SPIN', 180, D.WHITE)], out1='GRAB A CAN', cta='WHICH ONE ARE YOU?', items=[
+    dict(vcut='/home/claude/work/pp2/IMG_2456.npy', name='FANTA MANGO', sub='MANGO FLAVOUR', theme='purple', beats=12),
+    dict(vcut='/home/claude/work/pp2/IMG_2455.npy', name='CANADA DRY', sub='ZERO SUGAR · LIMITED OFFER', theme='yellow', beats=9),
+    dict(vcut='/home/claude/work/pp2/IMG_2457.npy', name='ALPINE MIX', sub='ORANGE & COLA', theme='blue', beats=9)]),
 }
 
 if __name__ == '__main__':
