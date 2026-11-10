@@ -7,39 +7,23 @@ from design import W, H, FPS, paste, tspr, sticker, star, pill, eb, eo, cl, bg, 
 import music
 INK=(17,15,22); BLUE=(62,193,232); BLUE_D=(36,150,200); ORANGE=(245,130,31); CREAM=(255,244,224); YEL=(255,214,40); WHITE=(255,255,255)
 
-LINES = [  # (start, text spoken, caption lines)
-    (0.4, "Hey! I'm Munchie!", ["HEY!", "I'M MUNCHIE!"]),
-    (2.8, "Meet Cheetos Masala Balls!", ["MEET CHEETOS", "MASALA BALLS!"]),
-    (6.0, "Find it in store, open twenty four seven!", ["FIND IT IN STORE,", "OPEN 24/7!"]),
-    (9.2, "On Brunette Ave, Coquitlam!", ["ON BRUNETTE AVE,", "COQUITLAM!"]),
-    (12.4, "Come snack with me!", ["COME SNACK", "WITH ME!"]),
-]
-DUR = 15.0
-SYL = .17
-
-def syllables(txt):
-    out = []
-    for w in txt.split():
-        n = max(1, len(re.findall(r'[aeiouy]+', w.lower()))); out.append(n)
-    return out
-
-def build_sched():
-    sch = []; caps = []
-    for k, (t0, txt, cap) in enumerate(LINES):
-        t = t0; rng = np.random.default_rng(k + 3)
-        for n in syllables(txt):
-            for s in range(n):
-                sch.append((t, SYL * .9, float(rng.uniform(.65, 1.0)), float(rng.uniform(430, 620)))); t += SYL
-            t += .07
-        caps.append((t0, t + .35, cap))
-    return sch, caps
-SCHED, CAPS = build_sched()
-
+import json, soundfile as sf
+TTS = '/home/claude/work/tts'
+_L = json.load(open(f'{TTS}/lines.json'))
+SCHED = []; CAPS = []; VOICE_PARTS = []; _t = 0.4
+for _i, _l in enumerate(_L):
+    SCHED.append((_t, _t + _l['dur'])); CAPS.append((_t, _t + _l['dur'] + .25, _l['cap'])); VOICE_PARTS.append((_t, f'{TTS}/line{_i}.wav')); _t += _l['dur'] + .32
+DUR = round(_t + .5, 2)
+PT = SCHED[1][0] - .1; S2 = SCHED[2][0] - .2; S3 = SCHED[4][0] - .2
+_SR = 24000
+_voice = np.zeros(int(DUR * _SR) + _SR)
+for _t0, _p in VOICE_PARTS:
+    _x, _sr = sf.read(_p, dtype='float32'); assert _sr == _SR; _i0 = int(_t0 * _SR); _voice[_i0:_i0 + len(_x)] += _x
+_win = int(.04 * _SR)
+_env = np.array([np.sqrt(np.mean(_voice[max(0, int(i / FPS * _SR) - _win):int(i / FPS * _SR) + _win] ** 2)) for i in range(int(DUR * FPS) + 2)])
+_env = _env / (np.percentile(_env[_env > .005], 90) + 1e-6)
 def mouth_open(t):
-    m = 0.0
-    for s, d, a, _ in SCHED:
-        if s <= t < s + d: m = max(m, a * math.sin(math.pi * (t - s) / d))
-    return m
+    i = int(t * FPS); return float(min(1.0, _env[i])) if 0 <= i < len(_env) else 0.0
 
 S = 2  # supersample
 def draw_munchie(op, blink, look, armL, armR, squash=0.0):
@@ -91,14 +75,14 @@ _cache = {}
 def mascot_sprite(t):
     op = round(mouth_open(t) * 8) / 8
     cyc = t % 2.3; blink = 1 if cyc < .11 else 0
-    prod = t > 2.7
+    prod = t > PT
     look = (.8, .2) if prod else (0, 0)
     wave = math.sin(t * 9)
     armL = 200 + 8 * math.sin(t * 3) if True else 0       # viewer-left arm down-out
     armL = 125 + 6 * math.sin(t * 3)
-    if t < 2.6: armR = -50 + 22 * wave                      # waving hello
-    elif 2.8 <= t < 5.8: armR = -35 + 10 * math.sin(t * 5)  # pointing up/right at product
-    elif t >= 12.4: armR = -60 + 25 * wave
+    if t < SCHED[1][0] - .2: armR = -50 + 22 * wave                      # waving hello
+    elif SCHED[1][0] <= t < SCHED[2][0] - .3: armR = -35 + 10 * math.sin(t * 5)  # pointing up/right at product
+    elif t >= SCHED[4][0]: armR = -60 + 25 * wave
     else: armR = 25 + 6 * math.sin(t * 3)
     key = (op, blink, look, round(armL), round(armR / 2) * 2)
     if key not in _cache:
@@ -110,7 +94,7 @@ PRODUCT = dict(src='IMG_2459', mode='cut', cutkw=dict(min_frac=.3, trim_thin=.4)
 
 def frame(i):
     t = i / FPS
-    th = 'purple' if t < 6.0 else ('green' if t < 12.2 else 'pink')
+    th = 'purple' if t < S2 else ('green' if t < S3 else 'pink')
     img = bg(W, H, th, ang=t * .5, cy=H * .5, n=20)
     gp = eb(cl((t - .1) / .6), 1.4); big = star(360 * gp + 5, (255, 255, 255), 5, .46, rot=-90 + t * 20); big.putalpha(big.split()[3].point(lambda v: int(v * .13))); paste(img, big, 540, 1180)
     header(img, W, D.TOP)
@@ -118,8 +102,8 @@ def frame(i):
     ent = eb(cl(t / .6), 1.6); bob = 10 * math.sin(t * 4.2)
     msp = mascot_sprite(t); paste(img, msp, 350, 1190 + bob + (1 - ent) * 500, scale=.8 * (.4 + .6 * ent))
     # product
-    if t > 2.7:
-        p = eb(cl((t - 2.7) / .5), 2.2); spr = D.art(PRODUCT, 480, 560)
+    if t > PT:
+        p = eb(cl((t - PT) / .5), 2.2); spr = D.art(PRODUCT, 480, 560)
         paste(img, spr, 800, 1210 + 14 * math.sin(t * 3.1), rot=6 * math.sin(t * 2.2) + (1 - p) * 40, scale=max(.05, p) * (1 + .03 * math.sin(t * 6)))
         for k in range(3):
             ang = t * 1.6 + k * 2.1; paste(img, star(26 + 6 * math.sin(t * 5 + k), YEL), 800 + 330 * math.cos(ang) * .8, 1210 + 300 * math.sin(ang), rot=t * 90)
@@ -133,10 +117,10 @@ def frame(i):
                 paste(img, tspr(ln, 92, YEL if j == 1 else WHITE, 10, 940), 540, 680 + j * 108, scale=max(.05, eb(p, 2.0)))
     # footer
     paste(img, tspr('VAPE & MUNCHIES · OPEN 24/7', 30, CREAM, 5, 900), 540, 1568)
-    for tc in (6.0, 12.2, 2.7):
+    for tc in (S2, S3, PT):
         dt = t - tc
         if 0 <= dt < .25: flash(img, .6 * (1 - dt / .25)); 
-        if 0 <= dt < .2 and tc != 2.7: img = rgb_split(img, 12 * (1 - dt / .2))
+        if 0 <= dt < .2 and tc != PT: img = rgb_split(img, 12 * (1 - dt / .2))
     return img.convert('RGB')
 
 def _chunk(a):
@@ -145,17 +129,18 @@ def _chunk(a):
     for i in range(s, e): p.stdin.write(frame(i).tobytes())
     p.stdin.close(); p.wait(); return path
 
-def blip(f0, d=.15):
-    t = music.t_(d); f = f0 * (1 + .18 * np.exp(-t * 25)); ph = 2 * np.pi * np.cumsum(f) / music.SR
-    x = np.sin(ph) + .35 * np.sin(2 * ph) + .15 * np.sin(3 * ph); return x * music.env(len(x), .004, d * .8, 0.0, .03) * .55
-
 def audio(path):
     n = DUR + .5; buf = np.zeros(int(music.SR * (n + 1)))
-    base = music.TRACKS['trap'](n, 150); buf[:len(base)] = base * .32
-    for s, d, a, f0 in SCHED: music.put(buf, blip(f0, d), s, a * .9)
-    for tc in (2.7, 6.0, 12.2): music.put(buf, music.whoosh(.4), tc - .3, .8); music.put(buf, music.pop(), tc + .1, .8)
-    music.put(buf, music.impact(.7), 0.0, .5)
-    music.write_wav(path, music.finish(buf, DUR))
+    base = music.TRACKS['trap'](n, 150); buf[:len(base)] = base * .3
+    for tc in (PT, S2, S3): music.put(buf, music.whoosh(.4), tc - .3, .7); music.put(buf, music.pop(), tc + .1, .6)
+    music.put(buf, music.impact(.7), 0.0, .45)
+    bed = music.finish(buf, DUR) * .38
+    vo = np.interp(np.arange(int(DUR * music.SR)) / music.SR * _SR, np.arange(len(_voice)), _voice)
+    vo = vo / (np.max(np.abs(vo)) + 1e-6) * .9
+    duck = 1 - .55 * np.clip(np.convolve(np.abs(vo), np.ones(2000) / 2000, 'same') * 6, 0, 1)
+    mix = bed[:len(vo)] * duck[:len(bed)] if len(bed) >= len(vo) else bed * duck[:len(bed)]
+    out = np.zeros(len(vo)); out[:len(mix)] += mix; out += vo
+    music.write_wav(path, np.clip(out, -1, 1))
 
 def render(out, tmp):
     from multiprocessing import get_context
