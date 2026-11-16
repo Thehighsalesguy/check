@@ -1,4 +1,4 @@
-"""'Food Radar' - reel #2: Biscuit ignores everything... except food.
+"""'Food Radar' - reel #2: Keef ignores everything... except food.
 
 Reuses the characters and rooms from reel.py.
 Usage:
@@ -67,7 +67,8 @@ def bowl(ctx, x, y, full=0.0, kibble_n=0):
     ellipse(ctx, x, y - 62, 105, 14)
     fs(ctx, rgb('#FFC2D1'), INK, 4)
     set_font(ctx, 26)
-    draw_lines(ctx, ['BISCUIT'], x, y - 30, 26, WHITE)
+    set_font(ctx, 30)
+    draw_lines(ctx, ['KEEF'], x, y - 30, 30, WHITE)
 
 
 def cat_bed(ctx, x, y):
@@ -176,10 +177,10 @@ def scene_call(ctx, t):
     eyes = 'one' if 2.4 <= t < 2.9 else 'sleep'
     cat_curled(ctx, 760, 1505, 0.9, facing=-1, eyes=eyes, breath=t * 3, look=(-1, -0.3))
     zzz(ctx, t, 820, 1340)
-    bub(ctx, t, 0.5, 1.7, 330, 640, 'Biscuit!', (300, 780))
-    bub(ctx, t, 1.9, 3.0, 330, 640, 'Biscuit? Come here!', (300, 780))
-    bub(ctx, t, 3.1, 4.6, 330, 620, 'BISCUIT!!!', (300, 780), size=64)
-    bub(ctx, t, 3.4, 5.0, 760, 1120, 'Who is Biscuit?', (760, 1380), thought=True, size=44)
+    bub(ctx, t, 0.5, 1.7, 330, 640, 'Keef!', (300, 780))
+    bub(ctx, t, 1.9, 3.0, 330, 640, 'Keef? Come here!', (300, 780))
+    bub(ctx, t, 3.1, 4.6, 330, 620, 'KEEF!!!', (300, 780), size=64)
+    bub(ctx, t, 3.4, 5.0, 760, 1120, 'Who is Keef?', (760, 1380), thought=True, size=44)
 
 
 def scene_bag(ctx, t):

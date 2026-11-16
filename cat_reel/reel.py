@@ -1020,7 +1020,7 @@ def scene2(ctx, t):
         fill(ctx, INK)
         ctx.restore()
     bub(ctx, t, 0.35, 2.5, 380, 700, 'Okay team, let me share my scree—', (440, 800))
-    bub(ctx, t, 4.0, 5.5, 300, 720, '...Biscuit is presenting now.', (420, 830), size=46, maxw=470)
+    bub(ctx, t, 4.0, 5.5, 300, 720, '...Keef is presenting now.', (420, 830), size=46, maxw=470)
 
 
 def scene3(ctx, t):
