@@ -49,12 +49,16 @@ def window_on(t, a, b):
 
 INK = rgb('#2B1E1A')
 WHITE = (1, 1, 1)
-CAT = rgb('#FCFCFE')   # white British Shorthair coat
-CAT_DK = rgb('#DCE2EC')  # soft grey shadow (far legs)
-CREAM = rgb('#EEF1F7')   # muzzle/belly tint
-PINK = rgb('#FF9DAA')
-IRIS = rgb('#5FB8F0')    # blue eyes
-STRIPES = False  # solid white coat, no tabby stripes
+# Keef: silver-shaded white British Shorthair (from the owner's photo)
+CAT = rgb('#F7F8FA')     # silvery white coat
+CAT_DK = rgb('#D8DDE5')  # soft grey shadow (far legs)
+CREAM = rgb('#FFFFFF')   # bright white muzzle/belly
+SILVER = rgb('#C3C9D2')  # faint silver tabby ticking on the forehead
+PINK = rgb('#F4A7B0')    # pink inner ears
+NOSE = rgb('#B9766C')    # rosy-brown nose
+IRIS = rgb('#7F9A70')    # grey-green eyes
+IRIS_DK = rgb('#4F6647')
+STRIPES = False  # no body stripes, only faint forehead markings
 SKIN = rgb('#F6CBA8')
 HAIR = rgb('#4A2E22')
 SHIRT = rgb('#5B8DEF')
@@ -289,23 +293,28 @@ def floaty_text(ctx, text, x, y, size, alpha, rot=0, color=WHITE):
 # ---------------------------------------------------------------- the cat
 def cat_head(ctx, eyes='open', look=(0, 0), mouth=0.0, blush=0.0):
     lx, ly = look
-    # small, rounded, wide-set ears (British Shorthair)
+    # Keef's ears: medium, softly pointed, pink inside
     for sx in (-1, 1):
-        ctx.move_to(sx * 92, -20)
-        ctx.curve_to(sx * 96, -70, sx * 86, -96, sx * 70, -96)
-        ctx.curve_to(sx * 58, -94, sx * 42, -80, sx * 30, -66)
+        ctx.move_to(sx * 94, -18)
+        ctx.curve_to(sx * 100, -80, sx * 92, -112, sx * 78, -116)
+        ctx.curve_to(sx * 62, -110, sx * 40, -84, sx * 26, -68)
         ctx.close_path()
         fs(ctx, CAT, INK, 5)
-        ctx.move_to(sx * 80, -36)
-        ctx.curve_to(sx * 82, -66, sx * 78, -82, sx * 68, -82)
-        ctx.curve_to(sx * 60, -80, sx * 50, -72, sx * 44, -64)
+        ctx.move_to(sx * 82, -34)
+        ctx.curve_to(sx * 86, -76, sx * 82, -98, sx * 75, -100)
+        ctx.curve_to(sx * 64, -96, sx * 50, -78, sx * 42, -66)
         ctx.close_path()
         fill(ctx, PINK)
     # round, chubby-cheeked face
     ellipse(ctx, 0, 4, 100, 78)
     fs(ctx, CAT, INK, 5)
-    ellipse(ctx, 0, 30, 46, 30)
+    ellipse(ctx, 0, 30, 48, 32)
     fill(ctx, CREAM)
+    # faint silver "M" ticking on the forehead, like Keef's
+    for a, b in (((-22, -66), (-16, -44)), ((-7, -72), (-4, -48)), ((7, -72), (4, -48)), ((22, -66), (16, -44))):
+        line(ctx, [a, b], SILVER, 6, 0.9)
+    for sx in (-1, 1):
+        line(ctx, [(sx * 60, -40), (sx * 78, -48)], SILVER, 5, 0.7)
     # stripes
     for a, b in (((-17, -71), (-12, -47)), ((0, -74), (0, -49)), ((17, -71), (12, -47))):
         if STRIPES: line(ctx, [a, b], CAT_DK, 8)
@@ -320,9 +329,13 @@ def cat_head(ctx, eyes='open', look=(0, 0), mouth=0.0, blush=0.0):
     def eye(sx, st):
         ex, ey = sx * 35, -6
         if st in ('open', 'half', 'evil', 'wide'):
-            rx, ry = (26, 28) if st == 'wide' else (22, 24)
+            rx, ry = (28, 29) if st == 'wide' else (24, 25)
             ellipse(ctx, ex, ey, rx, ry)
-            fs(ctx, IRIS, INK, 4)
+            fs(ctx, IRIS, INK, 7)  # thick dark "eyeliner" rim
+            ellipse(ctx, ex, ey, rx - 9, ry - 9)
+            ctx.set_source_rgba(*IRIS_DK, 0.35)
+            ctx.set_line_width(4)
+            ctx.stroke()
             if st == 'wide':
                 ellipse(ctx, ex + lx * 4, ey + ly * 4, 15, 19)
             else:
@@ -331,12 +344,12 @@ def cat_head(ctx, eyes='open', look=(0, 0), mouth=0.0, blush=0.0):
             ellipse(ctx, ex - 6 + lx * 4, ey - 9, 5.5, 5.5)
             fill(ctx, WHITE)
             if st == 'half':
-                ctx.rectangle(ex - 25, ey - 32, 50, 31)
+                ctx.rectangle(ex - 29, ey - 34, 58, 33)
                 fill(ctx, CAT)
-                line(ctx, [(ex - 21, ey - 1), (ex + 21, ey - 1)], INK, 5)
+                line(ctx, [(ex - 25, ey - 1), (ex + 25, ey - 1)], INK, 6)
             elif st == 'evil':
-                inner = ex - sx * 25
-                outer = ex + sx * 25
+                inner = ex - sx * 29
+                outer = ex + sx * 29
                 ctx.move_to(outer, ey - 34)
                 ctx.line_to(inner, ey - 34)
                 ctx.line_to(inner, ey + 5)
@@ -370,11 +383,11 @@ def cat_head(ctx, eyes='open', look=(0, 0), mouth=0.0, blush=0.0):
     ctx.move_to(0, 25)
     ctx.curve_to(2, 37, 14, 39, 20, 33)
     line_only(ctx, 4)
-    ctx.move_to(-11, 13)
-    ctx.line_to(11, 13)
-    ctx.line_to(0, 25)
+    ctx.move_to(-13, 12)
+    ctx.line_to(13, 12)
+    ctx.line_to(0, 26)
     ctx.close_path()
-    fs(ctx, PINK, INK, 3)
+    fs(ctx, NOSE, INK, 4)
     for sx in (-1, 1):
         for (a, b) in (((44, 22), (118, 10)), ((46, 31), (124, 33)), ((44, 40), (114, 57))):
             line(ctx, [(sx * a[0], a[1]), (sx * b[0], b[1])], INK, 3, 0.8)
@@ -1166,7 +1179,7 @@ def scene56(ctx, t, later=False):
         floaty_text(ctx, 'prrrrrr', 810 + math.sin(t * 20) * 3, 1170, 44,
                     0.6 + 0.4 * math.sin(t * 4), -0.08, rgb('#FFE8A3'))
     if not later:
-        bub(ctx, t, 3.0, 5.0, 420, 640, 'She loves me!! She REALLY loves me!', (500, 790))
+        bub(ctx, t, 3.0, 5.0, 420, 640, 'He loves me!! He REALLY loves me!', (500, 790))
         bub(ctx, t, 5.0, 6.5, 760, 720, 'Mmm. Heated seat. 10/10.', (640, 1190), thought=True, size=46)
     else:
         bub(ctx, t, 0.5, 2.5, 420, 640, 'I really... REALLY need to pee.', (500, 790))
@@ -1205,7 +1218,7 @@ CAPTIONS = [
     (5.6, 11.0, 'Working from home\nwith a cat:'),
     (11.1, 13.6, 'When I want cuddles:'),
     (13.6, 17.0, 'Rejected. In my own home.'),
-    (17.1, 20.8, 'When I ignore her\nfor 5 minutes:'),
+    (17.1, 20.8, 'When I ignore him\nfor 5 minutes:'),
     (20.8, 22.5, '...with FULL eye contact.'),
     (22.6, 29.0, 'But at night...'),
     (29.1, 33.2, '3 hours later...'),

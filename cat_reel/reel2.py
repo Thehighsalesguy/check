@@ -166,7 +166,7 @@ def cardboard_box(ctx, x, y, s, legs_phase=None, eyes='sleep', look=(0, 0), t=0.
 
 # ---------------------------------------------------------------- scenes
 def scene_call(ctx, t):
-    """0-5s: owner calls her name. Total ignore."""
+    """0-5s: owner calls his name. Total ignore."""
     bg_living(ctx, t)
     cat_bed(ctx, 760, 1560)
     calls = [(0.5, 1.7), (1.9, 3.0), (3.1, 4.6)]
@@ -330,7 +330,7 @@ def scene_bowl(ctx, t):
 
 
 CAPTIONS2 = [
-    (0.15, 5.0, 'My cat when I\ncall her name:'),
+    (0.15, 5.0, 'My cat when I\ncall his name:'),
     (5.05, 7.4, 'Now watch this:'),
     (7.4, 9.5, '0 to 100 in 0.2 seconds'),
     (9.55, 13.5, 'Deep sleep? Doesn\'t matter.'),
