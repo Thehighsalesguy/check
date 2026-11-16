@@ -49,11 +49,12 @@ def window_on(t, a, b):
 
 INK = rgb('#2B1E1A')
 WHITE = (1, 1, 1)
-CAT = rgb('#F39A45')
-CAT_DK = rgb('#D9782A')
-CREAM = rgb('#FFE7C9')
+CAT = rgb('#FCFCFE')   # white British Shorthair coat
+CAT_DK = rgb('#DCE2EC')  # soft grey shadow (far legs)
+CREAM = rgb('#EEF1F7')   # muzzle/belly tint
 PINK = rgb('#FF9DAA')
-IRIS = rgb('#9BD144')
+IRIS = rgb('#5FB8F0')    # blue eyes
+STRIPES = False  # solid white coat, no tabby stripes
 SKIN = rgb('#F6CBA8')
 HAIR = rgb('#4A2E22')
 SHIRT = rgb('#5B8DEF')
@@ -288,28 +289,29 @@ def floaty_text(ctx, text, x, y, size, alpha, rot=0, color=WHITE):
 # ---------------------------------------------------------------- the cat
 def cat_head(ctx, eyes='open', look=(0, 0), mouth=0.0, blush=0.0):
     lx, ly = look
-    # ears
+    # small, rounded, wide-set ears (British Shorthair)
     for sx in (-1, 1):
-        ctx.move_to(sx * 82, -22)
-        ctx.line_to(sx * 66, -104)
-        ctx.line_to(sx * 16, -64)
+        ctx.move_to(sx * 92, -20)
+        ctx.curve_to(sx * 96, -70, sx * 86, -96, sx * 70, -96)
+        ctx.curve_to(sx * 58, -94, sx * 42, -80, sx * 30, -66)
         ctx.close_path()
         fs(ctx, CAT, INK, 5)
-        ctx.move_to(sx * 68, -34)
-        ctx.line_to(sx * 60, -84)
-        ctx.line_to(sx * 30, -60)
+        ctx.move_to(sx * 80, -36)
+        ctx.curve_to(sx * 82, -66, sx * 78, -82, sx * 68, -82)
+        ctx.curve_to(sx * 60, -80, sx * 50, -72, sx * 44, -64)
         ctx.close_path()
         fill(ctx, PINK)
-    ellipse(ctx, 0, 0, 90, 75)
+    # round, chubby-cheeked face
+    ellipse(ctx, 0, 4, 100, 78)
     fs(ctx, CAT, INK, 5)
-    ellipse(ctx, 0, 30, 44, 28)
+    ellipse(ctx, 0, 30, 46, 30)
     fill(ctx, CREAM)
     # stripes
     for a, b in (((-17, -71), (-12, -47)), ((0, -74), (0, -49)), ((17, -71), (12, -47))):
-        line(ctx, [a, b], CAT_DK, 8)
+        if STRIPES: line(ctx, [a, b], CAT_DK, 8)
     for sx in (-1, 1):
-        line(ctx, [(sx * 89, -8), (sx * 70, -4)], CAT_DK, 7)
-        line(ctx, [(sx * 87, 12), (sx * 68, 11)], CAT_DK, 7)
+        if STRIPES: line(ctx, [(sx * 89, -8), (sx * 70, -4)], CAT_DK, 7)
+        if STRIPES: line(ctx, [(sx * 87, 12), (sx * 68, 11)], CAT_DK, 7)
     if blush > 0:
         for sx in (-1, 1):
             ellipse(ctx, sx * 58, 26, 15, 9)
@@ -318,13 +320,13 @@ def cat_head(ctx, eyes='open', look=(0, 0), mouth=0.0, blush=0.0):
     def eye(sx, st):
         ex, ey = sx * 35, -6
         if st in ('open', 'half', 'evil', 'wide'):
-            rx, ry = (23, 27) if st == 'wide' else (19, 23)
+            rx, ry = (26, 28) if st == 'wide' else (22, 24)
             ellipse(ctx, ex, ey, rx, ry)
             fs(ctx, IRIS, INK, 4)
             if st == 'wide':
                 ellipse(ctx, ex + lx * 4, ey + ly * 4, 15, 19)
             else:
-                ellipse(ctx, ex + lx * 7, ey + ly * 6, 7, 16)
+                ellipse(ctx, ex + lx * 7, ey + ly * 6, 8, 17)
             fill(ctx, INK)
             ellipse(ctx, ex - 6 + lx * 4, ey - 9, 5.5, 5.5)
             fill(ctx, WHITE)
@@ -413,8 +415,8 @@ def cat_sit(ctx, x, y, s=1.0, facing=1, eyes='open', look=(0, 0), mouth=0.0,
     ellipse(ctx, 0, -72, 46, 62)
     fill(ctx, CREAM)
     for sx in (-1, 1):
-        line(ctx, [(sx * 84, -122), (sx * 60, -116)], CAT_DK, 7)
-        line(ctx, [(sx * 86, -90), (sx * 62, -88)], CAT_DK, 7)
+        if STRIPES: line(ctx, [(sx * 84, -122), (sx * 60, -116)], CAT_DK, 7)
+        if STRIPES: line(ctx, [(sx * 86, -90), (sx * 62, -88)], CAT_DK, 7)
     kl = kr = 0
     if knead is not None:
         kl = max(0, math.sin(knead)) * 26
@@ -458,7 +460,7 @@ def cat_walk(ctx, x, y, s, facing, phase, eyes='open', look=(1, 0), tail=0.0, mo
     ellipse(ctx, 0, -105 - bob, 128, 60)
     fs(ctx, CAT, INK, 5)
     for bx in (-60, -20, 20):
-        line(ctx, [(bx, -163 - bob), (bx + 6, -138 - bob)], CAT_DK, 8)
+        if STRIPES: line(ctx, [(bx, -163 - bob), (bx + 6, -138 - bob)], CAT_DK, 8)
     for hx, off in hips:  # near legs
         leg(hx, off, CAT)
     ctx.save()
@@ -477,7 +479,7 @@ def cat_curled(ctx, x, y, s, facing=1, eyes='sleep', breath=0.0, look=(0, 0), bl
     ellipse(ctx, 10, -62 * b, 140, 64 * b)
     fs(ctx, CAT, INK, 5)
     for bx in (10, 50, 90):
-        line(ctx, [(bx, -122 * b), (bx - 4, -96 * b)], CAT_DK, 8)
+        if STRIPES: line(ctx, [(bx, -122 * b), (bx - 4, -96 * b)], CAT_DK, 8)
     ellipse(ctx, -40, -10, 26, 13)
     fs(ctx, CAT, INK, 4)
     ctx.save()
@@ -586,6 +588,8 @@ ARMS = {
     'down': ((-122, -290), (122, -290)),
     'open': ((-255, -700), (255, -700)),
     'phone': ((-122, -290), (5, -430)),
+    'hold': ((-122, -290), (60, -450)),
+    'pour': ((-122, -290), (160, -430)),
 }
 
 
@@ -1169,7 +1173,7 @@ def scene56(ctx, t, later=False):
         bub(ctx, t, 2.6, 4.3, 760, 1010, 'You live here now.', (650, 1200))
 
 
-def end_card(ctx, t):
+def end_card(ctx, t, title=('Tag someone whose', 'cat owns them'), sub='Follow for more cat chaos'):
     a = ease(seg(t, 0, 0.4))
     ctx.rectangle(0, 0, W, H)
     ctx.set_source_rgba(0.1, 0.06, 0.2, 0.6 * a)
@@ -1185,13 +1189,13 @@ def end_card(ctx, t):
         ctx.translate(540, 820)
         ctx.scale(s, s)
         set_font(ctx, 82)
-        draw_lines(ctx, ['Tag someone whose', 'cat owns them'], 0, 0, 82, WHITE, outline=INK, ow=14)
+        draw_lines(ctx, list(title), 0, 0, 82, WHITE, outline=INK, ow=14)
         ctx.restore()
     p2 = seg(t, 0.5, 0.8)
     if p2 > 0:
         ctx.push_group()
         set_font(ctx, 46)
-        draw_lines(ctx, ['Follow for more cat chaos'], 540, 1010, 46, YELLOW, outline=INK, ow=10)
+        draw_lines(ctx, [sub], 540, 1010, 46, YELLOW, outline=INK, ow=10)
         ctx.pop_group_to_source()
         ctx.paint_with_alpha(p2)
 
@@ -1210,8 +1214,8 @@ SCENES = [0.0, 5.5, 11.0, 17.0, 22.5, 29.0, 35.0]
 PUNCH = [2.8, 20.55, 23.8]
 
 
-def caption(ctx, t):
-    for a, b, text in CAPTIONS:
+def caption(ctx, t, caps=None):
+    for a, b, text in (caps or CAPTIONS):
         if a <= t < b:
             p = seg(t, a, a + 0.25)
             alpha = 1 - seg(t, b - 0.12, b)
