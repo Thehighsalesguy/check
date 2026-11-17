@@ -391,6 +391,11 @@ def cat_head(ctx, eyes='open', look=(0, 0), mouth=0.0, blush=0.0):
     for sx in (-1, 1):
         for (a, b) in (((44, 22), (118, 10)), ((46, 31), (124, 33)), ((44, 40), (114, 57))):
             line(ctx, [(sx * a[0], a[1]), (sx * b[0], b[1])], INK, 3, 0.8)
+    if HEAD_EXTRAS:  # optional accessories (hat, monocle...) drawn in head space
+        HEAD_EXTRAS(ctx)
+
+
+HEAD_EXTRAS = None
 
 
 def line_only(ctx, lw, color=INK):
@@ -603,16 +608,22 @@ ARMS = {
     'phone': ((-122, -290), (5, -430)),
     'hold': ((-122, -290), (60, -450)),
     'pour': ((-122, -290), (160, -430)),
+    'carry': ((-100, -425), (100, -425)),
 }
 
 
-def owner_stand(ctx, x, y, armA='down', armB=None, arm_t=0.0, head=None, dx=0.0):
+def owner_stand(ctx, x, y, armA='down', armB=None, arm_t=0.0, head=None, dx=0.0, walk=None):
     head = head or {}
-    for sx in (-1, 1):
-        rrect(ctx, x + sx * 52 - 32, y - 270, 64, 258, 28)
+    for i, sx in enumerate((-1, 1)):
+        lift = 0
+        if walk is not None:
+            lift = max(0.0, math.sin(walk + i * PI)) * 22
+        rrect(ctx, x + sx * 52 - 32, y - 270 - lift, 64, 258, 28)
         fs(ctx, PANTS, INK, 5)
-        ellipse(ctx, x + sx * 60, y - 10, 46, 20)
+        ellipse(ctx, x + sx * 60, y - 10 - lift, 46, 20)
         fs(ctx, SHOE, INK, 5)
+    if walk is not None:
+        y -= abs(math.sin(walk)) * 8
     x += dx
     rrect(ctx, x - 110, y - 585, 220, 345, 70)
     fs(ctx, SHIRT, INK, 5)
