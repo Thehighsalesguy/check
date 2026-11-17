@@ -52,6 +52,26 @@ Use 3–5 targeted hashtags rather than 30.
 > He loves me. He loves my lap. Unclear which one more. 🐾❤️
 > #catsofinstagram #catdad #catmom #funnycats #catreels
 
+## Week 2–3 batch (reels 6–9)
+
+Post these after the launch five, about one every 2–3 days.
+
+**6. The Vet Carrier** (`cat_reel_vet_carrier.mp4`)
+> Normal Tuesday: "my house." Vet day: puddle → statue → not home. 🏥🙅‍♂️ Which stage is your cat?
+> #catsofinstagram #funnycats #vetday #catreels #britishshorthair
+
+**7. Keef vs. the Cucumber** (`cat_reel_cucumber.mp4`)
+> Tried the cucumber trick. Keef had notes. 🥒🧐
+> #cucumbercat #catsofinstagram #funnycats #catreels #britishshorthair
+
+**8. Keef's Job Interview** (`cat_reel_job_interview.mp4`)
+> Strengths: sitting. Weaknesses: standing. Hired immediately. 💼👔
+> #catsofinstagram #funnycats #officecat #catreels #britishshorthair
+
+**9. The Spot** (`cat_reel_the_spot.mp4`)
+> Sat in his spot for 5 minutes. He sat in it for 1 second. It's about the principle. 🛋️👀
+> #catsofinstagram #funnycats #catlogic #catreels #britishshorthair
+
 ## Growth tips
 - **Mix in real Keef.** Post a real photo or clip of Keef next to the cartoon version ("Cartoon Keef vs Real Keef"). People love seeing the real cat, and it makes the account personal.
 - **End posts with a question** ("Which trait is your cat?"). Comments boost reach.
@@ -60,13 +80,13 @@ Use 3–5 targeted hashtags rather than 30.
 - **Pin your best 3 reels** to the top of the profile once you see which perform best.
 
 ## Next reel ideas
-1. **Keef reacts to the vet carrier.** He becomes a puddle, then a statue, then is "not home".
+1. ✅ **Keef reacts to the vet carrier** (done: reel 6). He becomes a puddle, then a statue, then is "not home".
 2. **Keef's Morning Routine (Gentleman Edition).** Tea, newspaper, judging the birds.
 3. **Things Keef has knocked off the table.** A "museum exhibit" of victims.
-4. **Keef vs. the cucumber.** Unbothered British Shorthair breaks the meme.
-5. **Keef's job interview.** "Strengths: sitting. Weaknesses: standing."
+4. ✅ **Keef vs. the cucumber** (done: reel 7). Unbothered British Shorthair breaks the meme.
+5. ✅ **Keef's job interview** (done: reel 8). "Strengths: sitting. Weaknesses: standing."
 6. **Bath time.** Absolute betrayal, with courtroom drama.
 7. **Keef meets a new kitten.** The stiff upper lip finally cracks.
-8. **When the owner sits in Keef's spot.** A silent, intense stare-down.
+8. ✅ **When the owner sits in Keef's spot** (done: reel 9). A silent, intense stare-down.
 9. **Keef's Christmas / birthday special.** He chooses the wrapping paper over the gift.
 10. **"Ask Keef":** fans comment questions and Keef answers in character.
