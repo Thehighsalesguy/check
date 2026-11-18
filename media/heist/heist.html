@@ -1,0 +1,207 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Bungee;src:url(fonts/bungee/files/bungee-latin-400-normal.woff2)}
+@font-face{font-family:Barlow;font-weight:800;src:url(fonts/barlow/files/barlow-latin-800-normal.woff2)}
+@font-face{font-family:Barlow;font-weight:900;src:url(fonts/barlow/files/barlow-latin-900-normal.woff2)}
+html,body{margin:0;background:#110F16}
+svg{display:block}
+.slide{display:none}
+</style></head><body>
+
+<svg width="1080" height="1350" viewBox="0 0 1080 1350" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#2B1F6E"/>
+    <stop offset=".35" stop-color="#5B3BA8"/>
+    <stop offset=".62" stop-color="#C24FA0"/>
+    <stop offset=".80" stop-color="#F27A86"/>
+    <stop offset="1" stop-color="#FFB46A"/>
+  </linearGradient>
+  <linearGradient id="streak" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#FF8FC8" stop-opacity="0"/>
+    <stop offset=".5" stop-color="#FF8FC8" stop-opacity=".55"/>
+    <stop offset="1" stop-color="#FF8FC8" stop-opacity="0"/>
+  </linearGradient>
+  <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#3A2457"/><stop offset="1" stop-color="#1A1228"/>
+  </linearGradient>
+  <linearGradient id="bag" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#E9DCC6"/><stop offset=".25" stop-color="#FFF8EC"/>
+    <stop offset=".8" stop-color="#FFF4E0"/><stop offset="1" stop-color="#D9C7AB"/>
+  </linearGradient>
+  <linearGradient id="rim" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#FF7AB8" stop-opacity=".0"/>
+    <stop offset="1" stop-color="#FF7AB8" stop-opacity=".45"/>
+  </linearGradient>
+  <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#110F16" stop-opacity="0"/>
+    <stop offset=".55" stop-color="#110F16" stop-opacity=".85"/>
+    <stop offset="1" stop-color="#110F16" stop-opacity="1"/>
+  </linearGradient>
+  <pattern id="paisleyO" width="34" height="34" patternUnits="userSpaceOnUse" patternTransform="rotate(20)">
+    <rect width="34" height="34" fill="#F5821F"/>
+    <circle cx="9" cy="9" r="4" fill="#FFF4E0" opacity=".85"/>
+    <path d="M22 20 q6 -6 9 2 q-4 6 -9 -2z" fill="#CE600E"/>
+    <circle cx="26" cy="29" r="2" fill="#110F16" opacity=".6"/>
+  </pattern>
+  <pattern id="paisleyK" width="30" height="30" patternUnits="userSpaceOnUse" patternTransform="rotate(-15)">
+    <rect width="30" height="30" fill="#24212E"/>
+    <circle cx="8" cy="8" r="3" fill="#3EC1E8" opacity=".55"/>
+    <path d="M18 18 q6 -6 9 2 q-4 6 -9 -2z" fill="#4A4558"/>
+  </pattern>
+  <clipPath id="shirtW"><path d="M150 1350 L170 700 Q180 610 270 585 L330 575 L390 585 Q480 610 492 700 L512 1350Z"/></clipPath>
+  <clipPath id="shirtM"><path d="M560 1350 L572 640 Q585 540 690 510 L760 500 L830 510 Q935 540 948 640 L960 1350Z"/></clipPath>
+  <g id="logoBag">
+    <!-- open-top paper bag, 220 x 270, origin top-left -->
+    <path d="M6 30 L214 30 L222 270 L-2 270 Z" fill="url(#bag)" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M6 30 L18 12 L40 26 L62 8 L86 24 L110 6 L134 24 L158 8 L182 26 L202 10 L214 30 Z" fill="#F1E3CB" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+    <rect x="8" y="232" width="206" height="16" fill="#F5821F"/>
+    <rect x="8" y="248" width="206" height="8" fill="#3EC1E8"/>
+    <image href="logo.png" x="18" y="82" width="186" height="131"/>
+    <path d="M6 30 L-2 270" stroke="#110F16" stroke-width="6"/>
+  </g>
+  <!-- loot sticking out of bags -->
+  <g id="chips">
+    <path d="M0 0 L70 -8 L78 110 L4 116 Z" fill="#F5821F" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M0 0 l8 -10 l9 8 l9 -10 l9 8 l9 -10 l9 8 l9 -10 l8 6" fill="none" stroke="#110F16" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M6 50 Q40 30 74 44 L76 70 Q40 58 8 76Z" fill="#C8401E"/>
+    <ellipse cx="38" cy="28" rx="16" ry="10" fill="#FFD25A" stroke="#110F16" stroke-width="3"/>
+  </g>
+  <g id="can">
+    <rect x="0" y="0" width="56" height="110" rx="8" fill="#D8262E" stroke="#110F16" stroke-width="6"/>
+    <rect x="0" y="34" width="56" height="34" fill="#FFF4E0" stroke="#110F16" stroke-width="4"/>
+    <rect x="6" y="-8" width="44" height="12" rx="4" fill="#C9CBD3" stroke="#110F16" stroke-width="5"/>
+    <rect x="10" y="10" width="7" height="90" rx="3" fill="#fff" opacity=".35"/>
+  </g>
+  <g id="choc">
+    <rect x="0" y="0" width="58" height="120" rx="6" fill="#2E8B4E" stroke="#110F16" stroke-width="6"/>
+    <rect x="0" y="0" width="58" height="26" rx="6" fill="#D9A520" stroke="#110F16" stroke-width="5"/>
+    <circle cx="29" cy="64" r="15" fill="#D9A520" stroke="#110F16" stroke-width="4"/>
+  </g>
+  <g id="pickle">
+    <path d="M10 0 Q38 -6 44 30 L48 120 Q30 132 6 122 L0 30 Q0 4 10 0Z" fill="#7DBB3A" stroke="#110F16" stroke-width="6"/>
+    <circle cx="18" cy="40" r="4" fill="#4E8A1E"/><circle cx="32" cy="70" r="4" fill="#4E8A1E"/><circle cx="16" cy="96" r="4" fill="#4E8A1E"/>
+  </g>
+  <g id="palm">
+    <path d="M0 0 Q-6 -160 10 -330" stroke="#1E1433" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <g fill="#1E1433" transform="translate(10,-330)">
+      <path d="M0 0 Q-60 -40 -130 10 Q-60 -10 0 6Z"/>
+      <path d="M0 0 Q60 -50 140 0 Q60 -16 0 6Z"/>
+      <path d="M0 0 Q-30 -70 -100 -70 Q-40 -46 0 4Z"/>
+      <path d="M0 0 Q30 -80 110 -66 Q40 -46 0 4Z"/>
+      <path d="M0 0 Q-80 10 -110 80 Q-60 20 0 8Z"/>
+      <path d="M0 0 Q80 10 116 76 Q60 22 0 8Z"/>
+    </g>
+  </g>
+</defs>
+
+<!-- ===== BACKGROUND ===== -->
+<rect width="1080" height="1350" fill="url(#sky)"/>
+<circle cx="560" cy="930" r="190" fill="#FFD27A" opacity=".55"/>
+<circle cx="560" cy="930" r="130" fill="#FFE3A0" opacity=".6"/>
+<g opacity=".9">
+  <rect x="-200" y="170" width="900" height="10" fill="url(#streak)" transform="rotate(-14 250 175)"/>
+  <rect x="300" y="250" width="1000" height="6" fill="url(#streak)" transform="rotate(-14 800 253)"/>
+  <rect x="-100" y="420" width="800" height="8" fill="url(#streak)" transform="rotate(-14 300 424)"/>
+  <rect x="500" y="120" width="700" height="5" fill="url(#streak)" transform="rotate(-14 850 122)"/>
+</g>
+<!-- skyline / store -->
+<g>
+  <use href="#palm" x="70" y="1000"/>
+  <use href="#palm" x="1010" y="960" transform="scale(1) "/>
+  <use href="#palm" x="935" y="1010" />
+  <!-- store building -->
+  <rect x="-10" y="860" width="430" height="300" fill="#2A1B45"/>
+  <rect x="-10" y="840" width="440" height="34" fill="#3A2660"/>
+  <rect x="0" y="900" width="420" height="10" fill="#1A1228"/>
+  <text x="70" y="866" font-family="Bungee" font-size="22" fill="#3EC1E8" text-anchor="middle" style="filter:drop-shadow(0 0 6px #3EC1E8)">SNACKS</text>
+  <!-- car -->
+  <g transform="translate(830,990)">
+    <path d="M0 80 L20 30 Q40 0 110 -4 L220 -4 Q270 0 300 40 L330 60 L330 120 L0 120Z" fill="#1A1228"/>
+    <path d="M60 30 Q80 8 130 6 L200 6 Q240 8 262 36Z" fill="#5B3BA8" opacity=".6"/>
+    <rect x="300" y="74" width="30" height="14" fill="#FF3B5C"/>
+  </g>
+  <rect x="0" y="1120" width="1080" height="230" fill="url(#ground)"/>
+</g>
+
+<!-- ===== WOMAN (left) ===== -->
+<g id="woman">
+  <path d="M370 330 Q470 330 470 430 Q468 520 420 560 Q440 480 410 420 Q395 380 360 370Z" fill="#3B2216" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M295 470 L298 560 L362 560 L366 470Z" fill="#B87650" stroke="#110F16" stroke-width="6"/>
+  <!-- arms (behind bag) -->
+  <path d="M190 640 Q140 760 150 900 Q160 990 230 1000 L240 950 Q200 940 198 890 Q196 790 226 700Z" fill="#C98A62" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M472 640 Q522 760 512 900 Q502 990 432 1000 L422 950 Q462 940 464 890 Q466 790 436 700Z" fill="#C98A62" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+  <rect x="140" y="900" width="46" height="13" rx="5" fill="#E8C870" stroke="#110F16" stroke-width="4" transform="rotate(8 163 906)"/>
+  <!-- shirt -->
+  <path d="M196 1350 L206 700 Q212 610 280 586 L330 576 L380 586 Q450 610 456 700 L466 1350Z" fill="#F4A6C8" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M206 700 Q212 610 280 586 L330 576 L380 586 Q450 610 456 700 L466 1350 L420 1350 L420 640Z" fill="url(#rim)"/>
+  <!-- sleeves -->
+  <path d="M168 720 Q170 616 260 588 L280 640 Q240 680 236 740Z" fill="#F4A6C8" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M494 720 Q492 616 402 588 L382 640 Q422 680 426 740Z" fill="#F4A6C8" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+  <!-- head -->
+  <path d="M262 380 Q258 300 330 288 Q400 290 402 370 L400 440 Q392 500 332 512 Q272 500 264 440Z" fill="#C98A62" stroke="#110F16" stroke-width="6"/>
+  <path d="M398 400 q22 -6 20 22 q-2 22 -22 18" fill="#B87650" stroke="#110F16" stroke-width="5"/>
+  <path d="M256 400 Q240 290 330 270 Q420 262 412 380 Q404 330 362 316 Q330 340 280 336 Q268 360 264 410Z" fill="#3B2216" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M300 300 Q340 284 380 300" stroke="#6B4030" stroke-width="5" fill="none"/>
+  <path d="M276 382 L322 392" stroke="#2A160E" stroke-width="9" stroke-linecap="round"/>
+  <path d="M344 394 L384 386" stroke="#2A160E" stroke-width="9" stroke-linecap="round"/>
+  <path d="M280 408 Q298 398 318 410 Q298 418 280 408Z" fill="#fff" stroke="#110F16" stroke-width="4"/>
+  <path d="M346 410 Q364 398 382 408 Q364 418 346 410Z" fill="#fff" stroke="#110F16" stroke-width="4"/>
+  <circle cx="292" cy="409" r="6" fill="#2A160E"/><circle cx="358" cy="409" r="6" fill="#2A160E"/>
+  <path d="M258 440 Q330 425 404 438 L410 470 Q400 560 334 640 Q262 560 254 470Z" fill="url(#paisleyO)" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M260 452 Q330 438 406 450" stroke="#CE600E" stroke-width="6" fill="none"/>
+  <path d="M404 452 L440 480 L426 500 L400 470Z" fill="#CE600E" stroke="#110F16" stroke-width="5" stroke-linejoin="round"/>
+  <!-- loot + bag -->
+  <use href="#chips" x="210" y="616" transform="rotate(-12 245 670)"/>
+  <use href="#pickle" x="400" y="612" transform="rotate(14 420 670)"/>
+  <g transform="translate(184 650) rotate(-3 148 180) scale(1.35)"><use href="#logoBag"/></g>
+  <!-- hands -->
+  <path d="M196 960 Q206 930 250 936 Q276 944 272 968 Q262 1000 222 998 Q196 992 196 960Z" fill="#C98A62" stroke="#110F16" stroke-width="6"/>
+  <path d="M236 944 q18 2 26 14 M226 958 q20 2 30 16" stroke="#8E5636" stroke-width="4" fill="none"/>
+  <path d="M466 960 Q456 930 412 936 Q386 944 390 968 Q400 1000 440 998 Q466 992 466 960Z" fill="#C98A62" stroke="#110F16" stroke-width="6"/>
+  <path d="M426 944 q-18 2 -26 14 M436 958 q-20 2 -30 16" stroke="#8E5636" stroke-width="4" fill="none"/>
+</g>
+
+<!-- ===== MAN (right) ===== -->
+<g id="man">
+  <path d="M722 410 L724 520 L800 520 L804 410Z" fill="#9C6440" stroke="#110F16" stroke-width="6"/>
+  <path d="M598 600 Q540 740 552 880 Q562 966 640 974 L650 920 Q608 910 606 864 Q604 760 636 670Z" fill="#B47450" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M924 600 Q982 740 970 880 Q960 966 882 974 L872 920 Q914 910 916 864 Q918 760 886 670Z" fill="#B47450" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+  <rect x="954" y="840" width="40" height="34" rx="8" fill="#24212E" stroke="#110F16" stroke-width="5" transform="rotate(-6 974 857)"/>
+  <path d="M606 1350 L614 640 Q624 540 700 512 L760 502 L820 512 Q896 540 906 640 L914 1350Z" fill="#3EC1E8" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M614 640 Q624 540 700 512 L760 502 L820 512 Q896 540 906 640 L914 1350 L860 1350 L860 560Z" fill="url(#rim)"/>
+  <path d="M570 680 Q574 556 680 516 L704 580 Q654 620 650 700Z" fill="#3EC1E8" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M950 680 Q946 556 840 516 L816 580 Q866 620 870 700Z" fill="#3EC1E8" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M684 300 Q682 214 762 204 Q842 210 842 296 L840 380 Q832 450 764 462 Q694 450 688 382Z" fill="#B47450" stroke="#110F16" stroke-width="6"/>
+  <path d="M686 330 q-24 -6 -22 22 q2 24 24 20" fill="#9C6440" stroke="#110F16" stroke-width="5"/>
+  <path d="M840 330 q24 -6 22 22 q-2 24 -24 20" fill="#9C6440" stroke="#110F16" stroke-width="5"/>
+  <path d="M682 316 Q672 200 764 190 Q856 196 846 316 Q840 262 820 246 Q770 262 712 246 Q690 266 682 316Z" fill="#1E140F" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M708 222 Q760 200 818 220" stroke="#4A3428" stroke-width="5" fill="none"/>
+  <path d="M704 304 L752 318" stroke="#160E0A" stroke-width="11" stroke-linecap="round"/>
+  <path d="M776 318 L824 304" stroke="#160E0A" stroke-width="11" stroke-linecap="round"/>
+  <path d="M708 334 Q728 322 750 334 Q728 344 708 334Z" fill="#fff" stroke="#110F16" stroke-width="4"/>
+  <path d="M778 334 Q800 322 820 334 Q800 344 778 334Z" fill="#fff" stroke="#110F16" stroke-width="4"/>
+  <circle cx="729" cy="334" r="7" fill="#160E0A"/><circle cx="799" cy="334" r="7" fill="#160E0A"/>
+  <path d="M684 360 Q764 344 846 360 L850 396 Q840 500 764 590 Q690 500 680 396Z" fill="url(#paisleyK)" stroke="#110F16" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M686 374 Q764 358 848 374" stroke="#4A4558" stroke-width="6" fill="none"/>
+  <use href="#choc" x="632" y="560" transform="rotate(-12 660 620)"/>
+  <use href="#can" x="838" y="560" transform="rotate(12 866 620)"/>
+  <g transform="translate(612 604) rotate(3 148 180) scale(1.35)"><use href="#logoBag"/></g>
+  <path d="M618 922 Q628 892 672 898 Q698 906 694 930 Q684 962 644 960 Q618 954 618 922Z" fill="#B47450" stroke="#110F16" stroke-width="6"/>
+  <path d="M658 906 q18 2 26 14 M648 920 q20 2 30 16" stroke="#7E4E30" stroke-width="4" fill="none"/>
+  <path d="M908 930 Q898 900 854 906 Q828 914 832 938 Q842 970 882 968 Q908 962 908 930Z" fill="#B47450" stroke="#110F16" stroke-width="6"/>
+  <path d="M868 914 q-18 2 -26 14 M878 928 q-20 2 -30 16" stroke="#7E4E30" stroke-width="4" fill="none"/>
+</g>
+
+<!-- ===== TYPE ===== -->
+<rect x="0" y="960" width="1080" height="390" fill="url(#fade)"/>
+<image href="logo.png" x="400" y="34" width="280" height="197" style="filter:drop-shadow(0 6px 10px rgba(0,0,0,.45))"/>
+<g font-family="Bungee" text-anchor="middle">
+  <text x="540" y="1124" font-size="54" fill="#3EC1E8" stroke="#110F16" stroke-width="12" paint-order="stroke" letter-spacing="2">THE MUNCHIES</text>
+  <text x="546" y="1250" font-size="140" fill="#CE600E" letter-spacing="4">HEIST</text>
+  <text x="540" y="1244" font-size="140" fill="#F5821F" stroke="#110F16" stroke-width="14" paint-order="stroke" letter-spacing="4">HEIST</text>
+</g>
+<text x="540" y="1312" font-family="Barlow" font-weight="800" font-size="27" fill="#FFF4E0" text-anchor="middle" letter-spacing="3">NEW MISSION UNLOCKED  |  @VAPEANDMUNCHIES</text>
+</svg>
+</body></html>
