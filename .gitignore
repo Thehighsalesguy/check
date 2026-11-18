@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 tools/fonts/node_modules/
 media/heist/fonts
+media/gta6/fonts

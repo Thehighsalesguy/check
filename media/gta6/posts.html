@@ -1,0 +1,203 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Anton;src:url(fonts/anton/files/anton-latin-400-normal.woff2)}
+@font-face{font-family:Barlow;font-weight:800;src:url(fonts/barlow/files/barlow-latin-800-normal.woff2)}
+@font-face{font-family:Barlow;font-weight:700;src:url(fonts/barlow/files/barlow-latin-700-normal.woff2)}
+html,body{margin:0;background:#000}
+svg{display:none} svg.on{display:block}
+</style></head><body>
+
+<!-- shared defs -->
+<svg width="0" height="0" style="position:absolute;display:block">
+<defs>
+  <linearGradient id="vi" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#FF4FA3"/><stop offset=".55" stop-color="#FF8A4C"/><stop offset="1" stop-color="#FFC75A"/>
+  </linearGradient>
+  <linearGradient id="viB" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#5FE3FF"/><stop offset="1" stop-color="#3EC1E8"/>
+  </linearGradient>
+  <linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#14103A"/><stop offset=".4" stop-color="#3C1E6E"/>
+    <stop offset=".7" stop-color="#B23C8E"/><stop offset=".88" stop-color="#FF6F7A"/><stop offset="1" stop-color="#FFB15C"/>
+  </linearGradient>
+  <linearGradient id="night" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#07061A"/><stop offset=".55" stop-color="#1D1043"/><stop offset="1" stop-color="#4A1650"/>
+  </linearGradient>
+  <linearGradient id="bottomFade" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#07060F" stop-opacity="0"/><stop offset=".5" stop-color="#07060F" stop-opacity=".85"/><stop offset="1" stop-color="#07060F"/>
+  </linearGradient>
+  <radialGradient id="glowPink"><stop offset="0" stop-color="#FF4FA3" stop-opacity=".75"/><stop offset="1" stop-color="#FF4FA3" stop-opacity="0"/></radialGradient>
+  <radialGradient id="glowRed"><stop offset="0" stop-color="#FF2340" stop-opacity=".8"/><stop offset="1" stop-color="#FF2340" stop-opacity="0"/></radialGradient>
+  <radialGradient id="glowBlue"><stop offset="0" stop-color="#2E6BFF" stop-opacity=".8"/><stop offset="1" stop-color="#2E6BFF" stop-opacity="0"/></radialGradient>
+  <radialGradient id="glowSun"><stop offset="0" stop-color="#FFE6A8"/><stop offset=".35" stop-color="#FFB86A" stop-opacity=".9"/><stop offset="1" stop-color="#FF6F7A" stop-opacity="0"/></radialGradient>
+  <radialGradient id="glowGreen"><stop offset="0" stop-color="#9BFF5A" stop-opacity=".55"/><stop offset="1" stop-color="#9BFF5A" stop-opacity="0"/></radialGradient>
+  <filter id="grain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4"/>
+    <feColorMatrix values="0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .09 0"/>
+  </filter>
+  <filter id="clouds" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency=".004 .018" numOctaves="4" seed="9"/>
+    <feColorMatrix values="0 0 0 0 1  0 0 0 0 .55  0 0 0 0 .75  0 0 0 1.1 -.55"/>
+  </filter>
+  <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+    <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000" flood-opacity=".6"/>
+  </filter>
+  <filter id="neon" x="-20%" y="-50%" width="140%" height="200%">
+    <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="blur8"><feGaussianBlur stdDeviation="8"/></filter>
+  <g id="palm">
+    <path d="M0 0 Q-10 -200 16 -420" stroke="#0B0718" stroke-width="18" fill="none" stroke-linecap="round"/>
+    <g fill="#0B0718" transform="translate(16,-420)">
+      <path d="M0 0 Q-70 -50 -170 14 Q-80 -14 0 8Z"/><path d="M0 0 Q70 -60 180 0 Q80 -20 0 8Z"/>
+      <path d="M0 0 Q-36 -90 -130 -90 Q-50 -60 0 6Z"/><path d="M0 0 Q36 -100 140 -84 Q50 -60 0 6Z"/>
+      <path d="M0 0 Q-100 14 -140 104 Q-74 26 0 10Z"/><path d="M0 0 Q100 14 150 98 Q76 28 0 10Z"/>
+    </g>
+  </g>
+  <g id="star"><path d="M0 -30 L8.8 -12 L28.5 -9.3 L14.3 4.6 L17.6 24.3 L0 15 L-17.6 24.3 L-14.3 4.6 L-28.5 -9.3 L-8.8 -12Z" stroke="#000" stroke-width="5" stroke-linejoin="round"/></g>
+  <g id="skyline" fill="#0E0A22">
+    <rect x="0" y="-160" width="70" height="160"/><rect x="70" y="-240" width="60" height="240"/><rect x="130" y="-120" width="80" height="120"/>
+    <rect x="210" y="-300" width="54" height="300"/><rect x="264" y="-190" width="90" height="190"/><rect x="354" y="-260" width="64" height="260"/>
+    <rect x="418" y="-140" width="70" height="140"/><rect x="488" y="-340" width="58" height="340"/><rect x="546" y="-210" width="84" height="210"/>
+    <rect x="630" y="-280" width="60" height="280"/><rect x="690" y="-150" width="90" height="150"/><rect x="780" y="-230" width="70" height="230"/>
+    <rect x="850" y="-310" width="56" height="310"/><rect x="906" y="-170" width="90" height="170"/><rect x="996" y="-250" width="84" height="250"/>
+  </g>
+  <pattern id="windows" width="22" height="26" patternUnits="userSpaceOnUse">
+    <rect x="6" y="6" width="7" height="10" fill="#FFB86A" opacity=".55"/>
+  </pattern>
+</defs>
+</svg>
+
+<!-- ============ 1. MOST WANTED ============ -->
+<svg id="p1" width="1080" height="1350" viewBox="0 0 1080 1350" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1080" height="1350" fill="url(#night)"/>
+  <rect width="1080" height="700" filter="url(#clouds)" opacity=".35"/>
+  <g transform="translate(0,980)"><use href="#skyline"/><use href="#skyline" fill="url(#windows)" opacity=".7"/></g>
+  <ellipse cx="80" cy="760" rx="520" ry="520" fill="url(#glowRed)"/>
+  <ellipse cx="1000" cy="760" rx="520" ry="520" fill="url(#glowBlue)"/>
+  <use href="#palm" x="60" y="1060"/><use href="#palm" x="1000" y="1040" transform="scale(-1 1) translate(-2000 0)"/>
+  <rect y="980" width="1080" height="370" fill="#0A0716"/>
+  <!-- wet street reflections -->
+  <rect x="0" y="990" width="420" height="10" fill="#FF2340" opacity=".35" filter="url(#blur8)"/>
+  <rect x="660" y="1000" width="420" height="10" fill="#2E6BFF" opacity=".35" filter="url(#blur8)"/>
+  <!-- HUD -->
+  <g transform="translate(1012,70)">
+    <use href="#star" x="0" fill="#fff"/><use href="#star" x="-66" fill="#fff"/><use href="#star" x="-132" fill="#fff"/><use href="#star" x="-198" fill="#fff"/><use href="#star" x="-264" fill="#fff"/>
+  </g>
+  <image href="logo.png" x="40" y="30" width="230" height="162"/>
+  <!-- products -->
+  <ellipse cx="540" cy="985" rx="380" ry="40" fill="#000" opacity=".6" filter="url(#blur8)"/>
+  <image href="cuts/dew_p.png" x="40" y="500" width="470" height="572" filter="url(#shadow)" transform="rotate(-7 275 790)"/>
+  <image href="cuts/cheetos_p.png" x="470" y="300" width="530" height="757" filter="url(#shadow)" transform="rotate(6 735 680)"/>
+  <rect y="930" width="1080" height="420" fill="url(#bottomFade)"/>
+  <!-- type -->
+  <text x="540" y="1100" font-family="Barlow" font-weight="800" font-size="32" fill="#fff" text-anchor="middle" letter-spacing="10">WANTED LEVEL: MAXIMUM</text>
+  <text x="540" y="1236" font-family="Anton" font-size="150" fill="url(#vi)" text-anchor="middle" letter-spacing="2" style="paint-order:stroke" stroke="#07060F" stroke-width="6">MOST WANTED</text>
+  <text x="540" y="1300" font-family="Barlow" font-weight="700" font-size="27" fill="#FFF4E0" text-anchor="middle" letter-spacing="4">MASALA BALLS · IMPORTED DEW · ON THE RUN</text>
+  <rect width="1080" height="1350" filter="url(#grain)"/>
+</svg>
+
+<!-- ============ 2. MISSION PASSED ============ -->
+<svg id="p2" width="1080" height="1350" viewBox="0 0 1080 1350" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1080" height="1350" fill="url(#dusk)"/>
+  <rect width="1080" height="900" filter="url(#clouds)" opacity=".45"/>
+  <circle cx="540" cy="860" r="420" fill="url(#glowSun)"/>
+  <circle cx="540" cy="860" r="150" fill="#FFE2A0"/>
+  <g fill="#B23C8E" opacity=".9"><rect x="380" y="840" width="320" height="8"/><rect x="380" y="866" width="320" height="10"/><rect x="380" y="896" width="320" height="12"/></g>
+  <g transform="translate(0,930)" opacity=".95"><use href="#skyline"/></g>
+  <!-- highway -->
+  <path d="M0 1350 L470 930 L610 930 L1080 1350Z" fill="#160C24"/>
+  <path d="M540 940 L540 1350" stroke="#FFC75A" stroke-width="6" stroke-dasharray="30 30" opacity=".8"/>
+  <path d="M120 1350 L500 935" stroke="#FF4FA3" stroke-width="5" opacity=".9" filter="url(#neon)"/>
+  <path d="M960 1350 L580 935" stroke="#FF8A4C" stroke-width="5" opacity=".9" filter="url(#neon)"/>
+  <use href="#palm" x="90" y="1000"/><use href="#palm" x="210" y="960" transform="scale(.8) translate(52 240)"/>
+  <use href="#palm" x="980" y="1000" transform="scale(-1 1) translate(-1960 0)"/>
+  <image href="logo.png" x="425" y="30" width="230" height="162"/>
+  <ellipse cx="540" cy="1000" rx="230" ry="30" fill="#000" opacity=".55" filter="url(#blur8)"/>
+  <image href="cuts/alpine_p.png" x="335" y="240" width="410" height="762" filter="url(#shadow)" transform="rotate(-6 540 620)"/>
+  <rect y="980" width="1080" height="370" fill="url(#bottomFade)"/>
+  <text x="540" y="1150" font-family="Anton" font-size="138" fill="url(#vi)" text-anchor="middle" letter-spacing="2" stroke="#07060F" stroke-width="6" style="paint-order:stroke">MISSION PASSED</text>
+  <text x="540" y="1214" font-family="Barlow" font-weight="800" font-size="36" fill="#fff" text-anchor="middle" letter-spacing="6">SNACK RUN COMPLETE</text>
+  <text x="540" y="1268" font-family="Barlow" font-weight="800" font-size="30" fill="#9BFF5A" text-anchor="middle" letter-spacing="4">+ RESPECT   + FLAVOUR   + IMPORTED SODA</text>
+  <text x="540" y="1318" font-family="Barlow" font-weight="700" font-size="22" fill="#FFF4E0" opacity=".8" text-anchor="middle" letter-spacing="4">@VAPEANDMUNCHIES · OPEN EVERY DAY</text>
+  <rect width="1080" height="1350" filter="url(#grain)"/>
+</svg>
+
+<!-- ============ 3. WAYPOINT SET ============ -->
+<svg id="p3" width="1080" height="1350" viewBox="0 0 1080 1350" xmlns="http://www.w3.org/2000/svg">
+  <defs><clipPath id="mapc"><rect x="110" y="250" width="860" height="760" rx="28"/></clipPath></defs>
+  <rect width="1080" height="1350" fill="url(#dusk)"/>
+  <rect width="1080" height="900" filter="url(#clouds)" opacity=".4"/>
+  <g transform="translate(0,1060)"><use href="#skyline"/></g>
+  <use href="#palm" x="40" y="1120"/><use href="#palm" x="1040" y="1100" transform="scale(-1 1) translate(-2080 0)"/>
+  <image href="logo.png" x="425" y="40" width="230" height="162"/>
+  <!-- map card -->
+  <g filter="url(#shadow)"><rect x="110" y="250" width="860" height="760" rx="28" fill="#1B1830"/></g>
+  <g clip-path="url(#mapc)">
+    <rect x="110" y="250" width="860" height="760" fill="#24203A"/>
+    <!-- blocks -->
+    <g fill="#2E2A48">
+      <rect x="140" y="280" width="200" height="150" rx="6"/><rect x="380" y="280" width="170" height="110" rx="6"/><rect x="620" y="270" width="320" height="140" rx="6"/>
+      <rect x="140" y="480" width="150" height="220" rx="6"/><rect x="330" y="560" width="180" height="140" rx="6"/><rect x="760" y="470" width="190" height="200" rx="6"/>
+      <rect x="140" y="760" width="230" height="220" rx="6"/><rect x="420" y="800" width="170" height="180" rx="6"/><rect x="660" y="760" width="290" height="220" rx="6"/>
+    </g>
+    <rect x="560" y="440" width="170" height="260" rx="8" fill="#1E4A3A"/>
+    <path d="M110 960 Q400 900 600 1010" stroke="#2C5FA8" stroke-width="60" fill="none" opacity=".8"/>
+    <!-- roads -->
+    <g stroke="#4A4566" stroke-width="16" fill="none" stroke-linecap="round">
+      <path d="M110 450 L970 450"/><path d="M110 735 L970 735"/><path d="M360 250 L360 1010"/><path d="M620 250 L620 1010"/>
+    </g>
+    <path d="M110 330 Q500 600 980 980" stroke="#5D5880" stroke-width="30" fill="none"/>
+    <path d="M110 330 Q500 600 980 980" stroke="#FFC75A" stroke-width="3" fill="none" stroke-dasharray="20 18" opacity=".7"/>
+    <!-- route -->
+    <path d="M300 990 L360 900 L360 735 Q420 640 540 590" stroke="#FF4FA3" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#neon)"/>
+    <!-- player arrow -->
+    <path d="M300 1000 l-20 26 l20 -8 l20 8z" fill="#fff" stroke="#000" stroke-width="3" transform="rotate(30 300 1010)"/>
+    <!-- labels -->
+    <text x="700" y="764" font-family="Barlow" font-weight="800" font-size="24" fill="#B8B2D8" letter-spacing="3" transform="rotate(36 700 764)">BRUNETTE AVE</text>
+    <text x="140" y="440" font-family="Barlow" font-weight="800" font-size="22" fill="#8C86AC" letter-spacing="3">HWY 1</text>
+  </g>
+  <!-- marker -->
+  <g transform="translate(540 590)">
+    <circle r="70" fill="url(#glowPink)"/>
+    <path d="M0 0 C-40 -46 -40 -110 0 -110 C40 -110 40 -46 0 0Z" fill="url(#vi)" stroke="#07060F" stroke-width="5"/>
+    <circle cy="-72" r="16" fill="#07060F"/>
+  </g>
+  <g transform="translate(560 430)">
+    <rect x="0" y="-36" width="336" height="58" rx="10" fill="#07060F" opacity=".9"/>
+    <text x="18" y="4" font-family="Barlow" font-weight="800" font-size="27" fill="#fff" letter-spacing="2">VAPE &amp; MUNCHIES</text>
+  </g>
+  <rect width="860" height="760" x="110" y="250" rx="28" fill="none" stroke="#07060F" stroke-width="8"/>
+  <!-- type -->
+  <rect y="1040" width="1080" height="310" fill="url(#bottomFade)"/>
+  <text x="540" y="1196" font-family="Anton" font-size="150" fill="url(#vi)" text-anchor="middle" letter-spacing="2" stroke="#07060F" stroke-width="6" style="paint-order:stroke">WAYPOINT SET</text>
+  <text x="540" y="1258" font-family="Barlow" font-weight="800" font-size="34" fill="#fff" text-anchor="middle" letter-spacing="5">934B BRUNETTE AVE · COQUITLAM</text>
+  <text x="540" y="1310" font-family="Barlow" font-weight="700" font-size="25" fill="#FFC75A" text-anchor="middle" letter-spacing="4">★ 5.0 ON GOOGLE · 102 REVIEWS · OPEN EVERY DAY</text>
+  <rect width="1080" height="1350" filter="url(#grain)"/>
+</svg>
+
+<!-- ============ 4. RARE LOOT (19+) ============ -->
+<svg id="p4" width="1080" height="1350" viewBox="0 0 1080 1350" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1080" height="1350" fill="url(#night)"/>
+  <rect width="1080" height="800" filter="url(#clouds)" opacity=".3"/>
+  <g transform="translate(0,1000)"><use href="#skyline"/><use href="#skyline" fill="url(#windows)" opacity=".6"/></g>
+  <circle cx="540" cy="700" r="460" fill="url(#glowGreen)"/>
+  <circle cx="540" cy="700" r="300" fill="none" stroke="#9BFF5A" stroke-width="4" opacity=".5" filter="url(#neon)"/>
+  <circle cx="540" cy="700" r="340" fill="none" stroke="#FF4FA3" stroke-width="3" opacity=".35" stroke-dasharray="14 18"/>
+  <use href="#palm" x="70" y="1080"/><use href="#palm" x="1010" y="1060" transform="scale(-1 1) translate(-2020 0)"/>
+  <rect y="1000" width="1080" height="350" fill="#0A0716"/>
+  <image href="logo.png" x="40" y="30" width="230" height="162"/>
+  <g transform="translate(910 70)"><rect x="-80" y="-42" width="160" height="84" rx="16" fill="#07060F" stroke="url(#vi)" stroke-width="5"/>
+    <text y="22" font-family="Anton" font-size="62" fill="#fff" text-anchor="middle">19+</text></g>
+  <ellipse cx="540" cy="1005" rx="210" ry="26" fill="#000" opacity=".6" filter="url(#blur8)"/>
+  <image href="cuts/goblin_p.png" x="330" y="215" width="420" height="800" filter="url(#shadow)"/>
+  <rect y="950" width="1080" height="400" fill="url(#bottomFade)"/>
+  <text x="540" y="1100" font-family="Barlow" font-weight="800" font-size="32" fill="#9BFF5A" text-anchor="middle" letter-spacing="10">NEW ITEM UNLOCKED</text>
+  <text x="540" y="1236" font-family="Anton" font-size="150" fill="url(#vi)" text-anchor="middle" letter-spacing="2" stroke="#07060F" stroke-width="6" style="paint-order:stroke">RARE LOOT</text>
+  <text x="540" y="1300" font-family="Barlow" font-weight="700" font-size="27" fill="#FFF4E0" text-anchor="middle" letter-spacing="4">CREATURE BEAKER · IN STORE NOW · 19+ ONLY</text>
+  <rect width="1080" height="1350" filter="url(#grain)"/>
+</svg>
+
+<script>const id=location.hash.slice(1)||'p1';document.getElementById(id).classList.add('on');</script>
+</body></html>
